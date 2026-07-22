@@ -8,6 +8,11 @@ if (!process.env.DATABASE_URL) {
   process.env.DATABASE_URL = readFileSync(tmpUrlFile, 'utf8').trim();
 }
 
+// Auth env defaults so the suite runs without a local .env (e.g. in CI).
+process.env.JWT_SECRET ??= 'test-jwt-secret';
+process.env.JWT_EXPIRES_IN ??= '1d';
+process.env.CORS_ORIGIN ??= 'http://localhost:5173';
+
 // Require (not import) so PrismaClient is instantiated *after* DATABASE_URL is set.
 const { prisma } = require('../src/lib/prisma') as typeof import('../src/lib/prisma');
 
