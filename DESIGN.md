@@ -18,7 +18,7 @@
   - **Neon** = dev + production DB (prod configured in Render dashboard env vars, never committed).
   - **Local Docker Postgres** (`docker compose up`) = documented reviewer local-run path (no signup).
   - **Testcontainers** = ephemeral Postgres for the test suite.
-- **Auth:** single stateless **JWT** (no refresh token). **bcrypt** cost 10–12, async API (fallback `bcryptjs` if native build bites). Role enum `USER`/`ADMIN`. Register creates `USER`; **admin seeded from env vars** (`ADMIN_EMAIL`/`ADMIN_PASSWORD`). No admin-promotes-others endpoint.
+- **Auth:** single stateless **JWT** (no refresh token). **bcrypt** cost **12**, async API (fallback `bcryptjs` if native build bites). Role enum `USER`/`ADMIN`. Register creates `USER`; **admin seeded from env vars** (`ADMIN_EMAIL`/`ADMIN_PASSWORD`). No admin-promotes-others endpoint.
 - **Token storage (frontend):** `localStorage` + `Authorization: Bearer` header.
 - **Validation:** **Zod** + reusable `validate` middleware. Zod mirrors Prisma enums. Enforces valid email + min 8-char password.
 - **Errors:** custom error classes (`NotFoundError`, `ConflictError`, `UnauthorizedError`, `ForbiddenError`, `ValidationError`) → single Express error-handling middleware → envelope `{ error: { message, code } }` (Zod errors add `details`). Express 5 propagates async errors natively (no `asyncHandler` wrapper needed).
