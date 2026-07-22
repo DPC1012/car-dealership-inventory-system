@@ -5,6 +5,7 @@ import {
   createVehicleSchema,
   updateVehicleSchema,
   searchVehicleSchema,
+  restockVehicleSchema,
 } from '../schemas/vehicle.schema';
 import * as vehicleController from '../controllers/vehicle.controller';
 
@@ -19,3 +20,5 @@ vehicleRouter.get('/:id', vehicleController.getVehicleById);
 vehicleRouter.post('/', validate({ body: createVehicleSchema }), vehicleController.createVehicle);
 vehicleRouter.put('/:id', validate({ body: updateVehicleSchema }), vehicleController.updateVehicle);
 vehicleRouter.delete('/:id', requireAdmin, vehicleController.deleteVehicle);
+vehicleRouter.post('/:id/purchase', vehicleController.purchaseVehicle);
+vehicleRouter.post('/:id/restock', requireAdmin, validate({ body: restockVehicleSchema }), vehicleController.restockVehicle);

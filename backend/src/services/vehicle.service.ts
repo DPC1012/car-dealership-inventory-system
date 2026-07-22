@@ -1,6 +1,6 @@
 import { Prisma, type Vehicle } from '@prisma/client';
 import { prisma } from '../lib/prisma';
-import { NotFoundError } from '../errors';
+import { NotFoundError, ConflictError } from '../errors';
 import type {
   CreateVehicleInput,
   UpdateVehicleInput,
@@ -70,5 +70,38 @@ export async function deleteVehicle(id: string): Promise<void> {
   await getVehicleById(id);
   await prisma.vehicle.delete({
     where: { id },
+  });
+}
+
+export async function purchaseVehicle(id: string): Promise<Vehicle> {
+  // Atomic conditional update to prevent overselling under concurrent load
+  const result = await prisma.vehicle.updateMany({
+    where: {
+      id,
+      quantity: { gt: 0 },
+    },
+    data: {
+      quantity: { decrement: 1 },
+    },
+  });
+
+  if (result.count === 0) {
+    const existing = await prisma.vehicle.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundError('Vehicle not found');
+    }
+    throw new ConflictError('Vehicle is out of stock');
+  }
+
+  return getVehicleById(id);
+}
+
+export async function restockVehicle(id: string, quantity: number): Promise<Vehicle> {
+  await getVehicleById(id);
+  return prisma.vehicle.update({
+    where: { id },
+    data: {
+      quantity: { increment: quantity },
+    },
   });
 }

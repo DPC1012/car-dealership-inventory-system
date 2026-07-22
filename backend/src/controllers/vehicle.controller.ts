@@ -33,3 +33,16 @@ export async function deleteVehicle(req: Request, res: Response): Promise<void> 
   await vehicleService.deleteVehicle(id);
   res.status(204).send();
 }
+
+export async function purchaseVehicle(req: Request, res: Response): Promise<void> {
+  const id = req.params.id as string;
+  const vehicle = await vehicleService.purchaseVehicle(id);
+  res.status(200).json({ vehicle });
+}
+
+export async function restockVehicle(req: Request, res: Response): Promise<void> {
+  const id = req.params.id as string;
+  const vehicle = await vehicleService.restockVehicle(id, req.body.quantity);
+  res.status(200).json({ vehicle });
+}
+
