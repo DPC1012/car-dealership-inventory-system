@@ -8,7 +8,11 @@
 - From commit #1: `.gitignore` (ignore `node_modules`, `.env`, build output, coverage), empty `PROMPTS.md`, and Claude co-author trailer.
 
 ## Backend
-- **Stack:** Node 20 LTS + TypeScript + **Express 4** (pin Node in README + `engines`).
+- **Stack:** Node (dev on 24, `engines: >=20`) + TypeScript **5.9** + **Express 5**.
+  - _Actual pinned versions (deviations from original plan, decided during scaffolding 2026-07-22):_
+    - **Express 5** (not 4): v5 is stable in 2026 and installed by default. It propagates async errors to error middleware natively, so **no `asyncHandler` wrapper needed**.
+    - **TypeScript 5.9** (not 7): TS 7 is the new native/Go compiler and ts-jest/ts-node don't support it yet. Pinned 5.x for ecosystem compatibility.
+    - **Prisma 6** (not 7): Prisma 7 dropped the `url = env(...)` datasource model for a driver-adapter/`prisma.config.ts` setup. Pinned 6.x to keep the standard, documented schema.
 - **Architecture:** three layers — routes → controllers → services → Prisma. All business logic + transactions live in **services**. Controllers stay thin.
 - **Database:** PostgreSQL via **Prisma**.
   - **Neon** = dev + production DB (prod configured in Render dashboard env vars, never committed).
@@ -17,7 +21,7 @@
 - **Auth:** single stateless **JWT** (no refresh token). **bcrypt** cost 10–12, async API (fallback `bcryptjs` if native build bites). Role enum `USER`/`ADMIN`. Register creates `USER`; **admin seeded from env vars** (`ADMIN_EMAIL`/`ADMIN_PASSWORD`). No admin-promotes-others endpoint.
 - **Token storage (frontend):** `localStorage` + `Authorization: Bearer` header.
 - **Validation:** **Zod** + reusable `validate` middleware. Zod mirrors Prisma enums. Enforces valid email + min 8-char password.
-- **Errors:** custom error classes (`NotFoundError`, `ConflictError`, `UnauthorizedError`, `ForbiddenError`, `ValidationError`) → single Express error-handling middleware → envelope `{ error: { message, code } }` (Zod errors add `details`). Async via `asyncHandler` wrapper.
+- **Errors:** custom error classes (`NotFoundError`, `ConflictError`, `UnauthorizedError`, `ForbiddenError`, `ValidationError`) → single Express error-handling middleware → envelope `{ error: { message, code } }` (Zod errors add `details`). Express 5 propagates async errors natively (no `asyncHandler` wrapper needed).
 - **CORS:** `cors` middleware, frontend origin from env var (needed even locally — different ports).
 - **Health:** `GET /health` → 200.
 

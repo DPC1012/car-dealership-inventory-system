@@ -1,0 +1,46 @@
+// Prisma schema for the Car Dealership Inventory System.
+// Two models — User and Vehicle. See DESIGN.md for the frozen data model.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum VehicleCategory {
+  SEDAN
+  SUV
+  TRUCK
+  COUPE
+  HATCHBACK
+  VAN
+  MOTORCYCLE
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String // bcrypt hash
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Vehicle {
+  id        String          @id @default(cuid())
+  make      String
+  model     String
+  category  VehicleCategory
+  price     Decimal         @db.Decimal(12, 2) // INR
+  quantity  Int             @default(0)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}

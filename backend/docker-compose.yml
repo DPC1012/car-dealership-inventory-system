@@ -1,0 +1,28 @@
+# Local Postgres for development and running the app.
+# Tests use ephemeral Testcontainers Postgres instead (not this).
+#
+# Usage:
+#   docker compose up -d
+#   (then point DATABASE_URL at postgresql://postgres:postgres@localhost:5432/dealership?schema=public)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dealership-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dealership
+    ports:
+      - "5432:5432"
+    volumes:
+      - dealership-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dealership-pgdata:
