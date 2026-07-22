@@ -97,3 +97,25 @@ The bundled `vehicles.test.ts` was split into `vehicles.crud.test.ts` and `vehic
 so each cycle has an independently-failing RED. History was then force-pushed (with a local backup tag
 retained). No behavior changed — the same 17 tests pass.
 
+---
+
+## Session 5 — Frontend SPA Implementation & High-Value RTL Tests (2026-07-23)
+
+Built the modern single-page React application conforming to `DESIGN_SYSTEM.md` and verified key component logic via Vitest + React Testing Library:
+
+- **Design System & Aesthetics (`DESIGN_SYSTEM.md` & `index.css`):** Created the "Showroom Floor" dark design language using graphite neutrals (`#13151A`, `#1B1E24`), single-voice amber accent (`#E3A143`), status-locked colors (Moss `#6FA787` for in-stock/success, Rust `#C4574A` for sold out/delete, Chrome `#5B7A99` for admin metadata), and Barlow Condensed signage typography split with Inter body text.
+- **Frontend SPA Architecture:** Scaffolded Vite + React + TypeScript with TanStack Query (`QueryClientProvider`), React Context (`AuthContext`), and custom fetch client handling JWT Bearer tokens in `localStorage`.
+- **Components:**
+  - `Navbar`: Showroom wordmark, active user/admin badge, sign-in/register trigger, and admin "Add Vehicle" button.
+  - `AuthModal`: Tabbed Login / Register form with validation and error alerts.
+  - `SearchFilters`: Search input by make, vehicle category chips (SEDAN, SUV, TRUCK, COUPE, HATCHBACK, VAN, MOTORCYCLE), min/max price inputs, and filter clearing.
+  - `VehicleCard`: Window sticker cards displaying make/model, category badge, stock status (IN STOCK, LOW STOCK, SOLD OUT), visually dominant amber price in INR (`₹`), purchase button (disabled when stock is 0), and admin edit/restock/delete controls.
+  - `VehicleModal` & `RestockModal`: Admin forms for adding/editing vehicles and quick restocking.
+  - `ToastContainer`: Real-time notification banners for purchase, restock, edit, delete, and error events.
+- **High-Value RTL Tests (8/8 Passing):**
+  - `AuthContext.test.tsx`: Verifies authentication state, token persistence in `localStorage`, and admin role determination.
+  - `SearchFilters.test.tsx`: Verifies input change events, category selection, and filter clearing.
+  - `VehicleCard.test.tsx`: Verifies vehicle spec rendering, INR price formatting, and asserts that the Purchase button is strictly disabled with `SOLD OUT` label when `quantity === 0`.
+- **Granular Git Commits:** Committed frontend in small conventional commits (`style:`, `feat:`) each carrying the `Co-authored-by: Claude <noreply@anthropic.com>` trailer.
+
+
