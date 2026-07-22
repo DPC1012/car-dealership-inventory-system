@@ -2,10 +2,10 @@
 // and returns a safe user (no password hash).
 import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma';
-import { hashPassword } from '../utils/password';
-import { ConflictError } from '../errors';
+import { hashPassword, verifyPassword } from '../utils/password';
+import { ConflictError, UnauthorizedError } from '../errors';
 import { toSafeUser, type SafeUser } from '../utils/serialize';
-import type { RegisterInput } from '../schemas/auth.schema';
+import type { RegisterInput, LoginInput } from '../schemas/auth.schema';
 
 export async function registerUser(input: RegisterInput): Promise<SafeUser> {
   const existing = await prisma.user.findUnique({
@@ -33,3 +33,20 @@ export async function registerUser(input: RegisterInput): Promise<SafeUser> {
     throw err;
   }
 }
+
+export async function loginUser(input: LoginInput): Promise<SafeUser> {
+  const user = await prisma.user.findUnique({
+    where: { email: input.email },
+  });
+  if (!user) {
+    throw new UnauthorizedError('Invalid credentials');
+  }
+
+  const isValid = await verifyPassword(input.password, user.password);
+  if (!isValid) {
+    throw new UnauthorizedError('Invalid credentials');
+  }
+
+  return toSafeUser(user);
+}
+
