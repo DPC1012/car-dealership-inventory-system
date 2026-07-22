@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import { env } from './config/env';
 import { authRouter } from './routes/auth.routes';
+import { vehicleRouter } from './routes/vehicle.routes';
 import { errorHandler } from './middleware/errorHandler';
 
 export const app = express();
@@ -17,8 +18,10 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/vehicles', vehicleRouter);
 
 // Error-handling middleware must be registered last.
 app.use(errorHandler);
 
 export default app;
+
