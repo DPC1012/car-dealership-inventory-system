@@ -9,6 +9,8 @@ import { VehicleCard } from './components/VehicleCard';
 import { AuthModal } from './components/AuthModal';
 import { VehicleModal } from './components/VehicleModal';
 import { RestockModal } from './components/RestockModal';
+import { HeroBanner } from './components/HeroBanner';
+import { ShowcaseSections } from './components/ShowcaseSections';
 import { ToastContainer, type ToastMessage } from './components/Toast';
 import { Car, RefreshCw, Layers } from 'lucide-react';
 
@@ -165,17 +167,24 @@ export const AppContent: React.FC = () => {
         onOpenAddVehicle={handleOpenAddVehicle}
       />
 
-      <main className="max-w-[1152px] mx-auto px-4 sm:px-6 py-8 flex-1 w-full">
-        {/* Hero Section */}
-        <div className="mb-8">
+      <main className="max-w-[1240px] mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-10">
+        {/* Luxury Landing Hero Banner & Floating Search */}
+        <HeroBanner
+          onSearch={(newFilters) => setFilters((prev) => ({ ...prev, ...newFilters }))}
+          onSelectCategory={(cat) => setFilters((prev) => ({ ...prev, category: cat }))}
+          activeCategory={filters.category}
+        />
+
+        {/* Showroom Inventory Headline & Filters */}
+        <div id="showroom-inventory">
           <div className="flex items-center gap-2 text-[#454C5C] font-signage text-xs uppercase tracking-widest mb-1 font-semibold">
             <Layers className="w-4 h-4 text-[#E3A143]" />
             <span>Showroom Inventory Management</span>
           </div>
-          <h1 className="font-signage text-4xl sm:text-5xl font-bold tracking-tight text-[#F3F0E9] uppercase">
-            THE SHOWROOM FLOOR
-          </h1>
-          <p className="text-sm text-[#F3F0E9]/70 mt-1 max-w-2xl font-sans">
+          <h2 className="font-signage text-3xl sm:text-4xl font-bold tracking-tight text-[#F3F0E9] uppercase">
+            EXPLORE SHOWROOM INVENTORY
+          </h2>
+          <p className="text-xs sm:text-sm text-[#F3F0E9]/70 mt-1 max-w-2xl font-sans">
             Real-time dealership vehicle stock, price specifications in INR (₹), and instant purchasing.
           </p>
         </div>
@@ -238,12 +247,14 @@ export const AppContent: React.FC = () => {
             ))}
           </div>
         )}
-      </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[#333846] bg-[#1B1E24] py-6 text-center text-xs text-[#454C5C] font-signage tracking-wider uppercase mt-12">
-        <p>Roadstead Motors — Full-Stack Car Dealership Inventory System © 2026</p>
-      </footer>
+        {/* Reference Image Inspired Showcase Sections & Rich Footer */}
+        <ShowcaseSections
+          onSelectCategory={(cat) => setFilters((prev) => ({ ...prev, category: cat }))}
+          onSearch={(newFilters) => setFilters((prev) => ({ ...prev, ...newFilters }))}
+          onOpenAuth={() => setIsAuthModalOpen(true)}
+        />
+      </main>
 
       {/* Modals & Toasts */}
       <AuthModal
