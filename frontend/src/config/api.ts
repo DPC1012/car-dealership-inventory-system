@@ -31,10 +31,13 @@ export async function fetchApi<T>(
   const data = await response.json();
 
   if (response.status === 401) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.dispatchEvent(new Event('auth-expired'));
-    throw new Error('Session expired. Please sign in again.');
+    if (!isAuthEndpoint) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.dispatchEvent(new Event('auth-expired'));
+    }
+    const message = data?.error?.message || data?.message || 'Invalid credentials';
+    throw new Error(message);
   }
 
   if (!response.ok) {
