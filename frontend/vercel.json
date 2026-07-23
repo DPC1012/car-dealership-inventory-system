@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://car-dealership-api.onrender.com/api/:path*"
+      "destination": "https://car-dealership-inventory-system-njrt.onrender.com/api/:path*"
     }
   ],
   "headers": [

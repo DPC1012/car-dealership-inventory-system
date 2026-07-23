@@ -4,8 +4,8 @@ A full-stack luxury car dealership inventory management system built with the TD
 
 ## Live Demo
 
-- **Frontend (Vercel):** [https://car-dealership.vercel.app](https://car-dealership.vercel.app)
-- **Backend API (Render):** [https://car-dealership-api.onrender.com](https://car-dealership-api.onrender.com)
+- **Frontend (Vercel):** [https://car-dealership-inventory-system-inky.vercel.app](https://car-dealership-inventory-system-inky.vercel.app)
+- **Backend API (Render):** [https://car-dealership-inventory-system-njrt.onrender.com](https://car-dealership-inventory-system-njrt.onrender.com)
 
 > **Note:** The backend Render service may take ~30s to spin up on first request (free tier cold start).
 
