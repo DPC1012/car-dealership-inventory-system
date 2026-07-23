@@ -56,6 +56,19 @@ describe('Inventory Operations & Concurrency', () => {
     expect(res.body.error).toBeDefined();
   });
 
+  it('returns 403 when admin attempts to purchase a vehicle', async () => {
+    const v = await prisma.vehicle.create({
+      data: { make: 'Porsche', model: '911', category: 'COUPE', price: 15000000, quantity: 2 },
+    });
+
+    const res = await request(app)
+      .post(`/api/vehicles/${v.id}/purchase`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.error).toBeDefined();
+  });
+
   it('restocks a vehicle as admin (POST /api/vehicles/:id/restock)', async () => {
     const v = await prisma.vehicle.create({
       data: { make: 'Porsche', model: '911', category: 'COUPE', price: 15000000, quantity: 1 },

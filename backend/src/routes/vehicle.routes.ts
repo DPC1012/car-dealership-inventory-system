@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
+import { authenticate, requireAdmin, requireUser } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate';
 import { upload } from '../middleware/upload.middleware';
 import {
@@ -17,8 +17,8 @@ vehicleRouter.get('/', vehicleController.getVehicles);
 vehicleRouter.get('/search', validate({ query: searchVehicleSchema }), vehicleController.searchVehicles);
 vehicleRouter.get('/:id', vehicleController.getVehicleById);
 
-// Protected — must be logged in
-vehicleRouter.post('/:id/purchase', authenticate, vehicleController.purchaseVehicle);
+// Protected — must be logged in as a customer
+vehicleRouter.post('/:id/purchase', authenticate, requireUser, vehicleController.purchaseVehicle);
 
 // Admin only
 vehicleRouter.post('/upload-image', authenticate, requireAdmin, upload.single('image'), vehicleController.uploadImage);

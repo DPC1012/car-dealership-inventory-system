@@ -36,3 +36,14 @@ export function requireAdmin(
   }
   next();
 }
+
+export function requireUser(
+  req: AuthenticatedRequest,
+  _res: Response,
+  next: NextFunction
+): void {
+  if (!req.user || req.user.role !== 'USER') {
+    throw new ForbiddenError('Customer access required');
+  }
+  next();
+}
