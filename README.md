@@ -28,14 +28,7 @@
 
 ## Screenshots
 
-### Light Mode
-
-| Hero |
-|------|
-| ![Light Hero](screenshots/light-mode-hero.png) |
-
-<details>
-<summary><strong>Dark Mode (click to expand)</strong></summary>
+### Dark Mode
 
 | Hero | Vehicle Grid | Vehicle Detail |
 |------|-------------|----------------|
@@ -52,6 +45,13 @@
 | Ending |
 |--------|
 | ![Ending](screenshots/dark-mode-ending.png) |
+
+<details>
+<summary><strong>Light Mode (click to expand)</strong></summary>
+
+| Hero |
+|------|
+| ![Light Hero](screenshots/light-mode-hero.png) |
 
 </details>
 

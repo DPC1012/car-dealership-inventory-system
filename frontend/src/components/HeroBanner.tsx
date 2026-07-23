@@ -1,6 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, ChevronDown } from 'lucide-react';
 import type { VehicleCategory, SearchFilters } from '../types';
+
+const CustomSelect: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  options: { value: string; label: string }[];
+  placeholder: string;
+}> = ({ value, onChange, options, placeholder }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedOption = options.find((o) => o.value === value);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-3 text-sm font-sans text-left flex items-center justify-between focus:border-[#111111] focus:bg-white outline-none transition-all"
+      >
+        <span className={selectedOption ? 'text-[#18181B]' : 'text-[#9CA3AF]'}>
+          {selectedOption?.label || placeholder}
+        </span>
+        <ChevronDown className={`w-4 h-4 text-[#9CA3AF] transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <div role="listbox" className="absolute z-50 w-full mt-2 bg-white border border-[#E5E7EB] rounded-2xl shadow-xl overflow-hidden animate-dropdown">
+          <div className="max-h-60 overflow-y-auto">
+            {options.map((option) => (
+              <button
+                key={option.value}
+                role="option"
+                aria-selected={value === option.value}
+                type="button"
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                }}
+                className={`w-full px-4 py-3 text-sm text-left transition-colors ${
+                  value === option.value
+                    ? 'bg-[#F5F5F5] font-semibold text-[#111111]'
+                    : 'text-[#18181B] hover:bg-[#FAFAFA]'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface HeroBannerProps {
   onSearch: (filters: SearchFilters) => void;
@@ -97,36 +162,36 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSearch, activeCategory
                 <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
                   Select Manufacturer
                 </label>
-                <select
+                <CustomSelect
                   value={selectedMake}
-                  onChange={(e) => setSelectedMake(e.target.value)}
-                  className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-3 text-sm font-sans text-[#18181B] focus:border-[#111111] focus:bg-white outline-none transition-all"
-                >
-                  <option value="">All Luxury Brands</option>
-                  {manufacturers.sort().map((make) => (
-                    <option key={make} value={make}>{make}</option>
-                  ))}
-                </select>
+                  onChange={setSelectedMake}
+                  options={[
+                    { value: '', label: 'All Luxury Brands' },
+                    ...manufacturers.sort().map((make) => ({ value: make, label: make })),
+                  ]}
+                  placeholder="All Luxury Brands"
+                />
               </div>
 
               <div>
                 <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
                   Body Style Category
                 </label>
-                <select
+                <CustomSelect
                   value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value as VehicleCategory | '')}
-                  className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-3 text-sm font-sans text-[#18181B] focus:border-[#111111] focus:bg-white outline-none transition-all"
-                >
-                  <option value="">All Categories</option>
-                  <option value="SEDAN">SEDAN</option>
-                  <option value="SUV">SUV</option>
-                  <option value="COUPE">COUPE</option>
-                  <option value="TRUCK">TRUCK</option>
-                  <option value="HATCHBACK">HATCHBACK</option>
-                  <option value="VAN">VAN</option>
-                  <option value="MOTORCYCLE">MOTORCYCLE</option>
-                </select>
+                  onChange={(val) => setSelectedCategory(val as VehicleCategory | '')}
+                  options={[
+                    { value: '', label: 'All Categories' },
+                    { value: 'SEDAN', label: 'Sedan' },
+                    { value: 'SUV', label: 'SUV' },
+                    { value: 'COUPE', label: 'Coupe' },
+                    { value: 'TRUCK', label: 'Truck' },
+                    { value: 'HATCHBACK', label: 'Hatchback' },
+                    { value: 'VAN', label: 'Van' },
+                    { value: 'MOTORCYCLE', label: 'Motorcycle' },
+                  ]}
+                  placeholder="All Categories"
+                />
               </div>
 
               <div>

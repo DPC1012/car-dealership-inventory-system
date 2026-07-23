@@ -48,6 +48,10 @@
     --color-input-bg: #1C1C1F;
   }
 
+  html {
+    scroll-padding-top: 6rem;
+  }
+
   body {
     background-color: var(--color-bg);
     color: var(--color-primary-text);
@@ -204,6 +208,15 @@
 .animate-panel {
   animation: panel-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
+}
+
+/* Custom select dropdown entrance */
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-dropdown {
+  animation: dropdown-in 0.15s ease-out forwards;
 }
 
 /* Navbar blur backdrop */
