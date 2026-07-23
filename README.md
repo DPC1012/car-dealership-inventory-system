@@ -28,25 +28,30 @@
 
 ## Screenshots
 
-<details>
-<summary><strong>Light Mode (click to expand)</strong></summary>
+### Light Mode
 
-| Homepage | Inventory | Search & Filter |
-|----------|-----------|-----------------|
-| ![Homepage](screenshots/homepage-light.png) | ![Inventory](screenshots/inventory-light.png) | ![Search](screenshots/search-filter.png) |
-
-| Vehicle Detail | Admin Panel |
-|---------------|-------------|
-| ![Vehicle Detail](screenshots/vehicle-detail.png) | ![Admin Panel](screenshots/admin-panel.png) |
-
-</details>
+| Hero |
+|------|
+| ![Light Hero](screenshots/light-mode-hero.png) |
 
 <details>
 <summary><strong>Dark Mode (click to expand)</strong></summary>
 
-| Homepage | Inventory | Detail |
-|----------|-----------|--------|
-| ![Dark Home](screenshots/dark-mode-home.png) | ![Dark Inventory](screenshots/dark-mode-inventory.png) | ![Dark Detail](screenshots/dark-mode-detail.png) |
+| Hero | Vehicle Grid | Vehicle Detail |
+|------|-------------|----------------|
+| ![Dark Hero](screenshots/dark-mode-hero.png) | ![Car Grid](screenshots/dark-mode-car-grid.png) | ![Car Detail](screenshots/dark-mode-car.png) |
+
+| Category Filter | Admin Dashboard |
+|----------------|-----------------|
+| ![Category](screenshots/dark-mode-category.png) | ![Admin](screenshots/dark-mode-admin.png) |
+
+| Add Vehicle | Update Vehicle | Restock |
+|-------------|---------------|---------|
+| ![Add Vehicle](screenshots/dark-mode-add-vehicle.png) | ![Update Car](screenshots/dark-mode-update-car.png) | ![Restock](screenshots/dark-mode-restock.png) |
+
+| Ending |
+|--------|
+| ![Ending](screenshots/dark-mode-ending.png) |
 
 </details>
 
