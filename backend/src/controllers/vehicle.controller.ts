@@ -46,3 +46,16 @@ export async function restockVehicle(req: Request, res: Response): Promise<void>
   res.status(200).json({ vehicle });
 }
 
+export async function uploadImage(req: Request, res: Response): Promise<void> {
+  if (!req.file) {
+    res.status(400).json({ error: { message: 'No image file uploaded' } });
+    return;
+  }
+  const imageUrl = await vehicleService.uploadVehicleImage(
+    req.file.buffer,
+    req.file.originalname
+  );
+  res.status(200).json({ imageUrl });
+}
+
+

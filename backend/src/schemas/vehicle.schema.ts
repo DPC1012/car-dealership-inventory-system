@@ -9,6 +9,7 @@ export const createVehicleSchema = z.object({
   category: vehicleCategoryEnum,
   price: z.number().positive('Price must be greater than 0'),
   quantity: z.number().int().min(0, 'Quantity cannot be negative'),
+  imageUrl: z.string().nullable().optional(),
 });
 
 export type CreateVehicleInput = z.infer<typeof createVehicleSchema>;

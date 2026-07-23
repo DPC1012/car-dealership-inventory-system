@@ -105,3 +105,10 @@ export async function restockVehicle(id: string, quantity: number): Promise<Vehi
     },
   });
 }
+
+export async function uploadVehicleImage(fileBuffer: Buffer, originalName: string): Promise<string> {
+  const { uploadImageToImageKit } = await import('../lib/imagekit');
+  const fileName = `vehicle-${Date.now()}-${originalName.replace(/\s+/g, '_')}`;
+  return uploadImageToImageKit(fileBuffer, fileName);
+}
+

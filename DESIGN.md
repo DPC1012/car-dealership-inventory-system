@@ -23,12 +23,13 @@
 - **Validation:** **Zod** + reusable `validate` middleware. Zod mirrors Prisma enums. Enforces valid email + min 8-char password.
 - **Errors:** custom error classes (`NotFoundError`, `ConflictError`, `UnauthorizedError`, `ForbiddenError`, `ValidationError`) → single Express error-handling middleware → envelope `{ error: { message, code } }` (Zod errors add `details`). Express 5 propagates async errors natively (no `asyncHandler` wrapper needed).
 - **CORS:** `cors` middleware, frontend origin from env var (needed even locally — different ports).
-- **Health:** `GET /health` → 200.
+- **Media Upload:** Multer in-memory storage (`multer.memoryStorage()`) + ImageKit Node.js SDK for server-side proxy upload (`POST /api/vehicles/upload-image` or vehicle form handling). Keeps private key secret and avoids local disk dependencies on cloud hosts.
 
 ## Data model (Prisma, two tables — no orders table)
 **User:** `id` cuid · `email` unique · `password` bcrypt hash · `role` enum `Role{USER,ADMIN}` default USER · `createdAt` · `updatedAt`
 
-**Vehicle:** `id` cuid · `make` · `model` · `category` enum `VehicleCategory{SEDAN,SUV,TRUCK,COUPE,HATCHBACK,VAN,MOTORCYCLE}` · `price` **Decimal** (currency **INR**; frontend formats ₹ via en-IN; no symbol stored) · `quantity` Int default 0 (`>= 0`) · `createdAt` · `updatedAt`
+**Vehicle:** `id` cuid · `make` · `model` · `category` enum `VehicleCategory{SEDAN,SUV,TRUCK,COUPE,HATCHBACK,VAN,MOTORCYCLE}` · `price` **Decimal** (currency **INR**; frontend formats ₹ via en-IN; no symbol stored) · `quantity` Int default 0 (`>= 0`) · `imageUrl` String? · `imageFileId` String? · `createdAt` · `updatedAt`
+
 
 ## Inventory logic (the heart)
 - **Purchase** `POST /:id/purchase`: buys exactly **1**. Atomic conditional update — `updateMany` with `quantity: { gt: 0 }`, decrement 1; if `count === 0` → **409**. (Showcase: concurrent-purchase test asserting stock never goes negative.)

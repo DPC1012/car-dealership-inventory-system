@@ -11,6 +11,9 @@ const envSchema = z.object({
   ADMIN_PASSWORD: z.string().optional(),
   PORT: z.coerce.number().default(4000),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  IMAGEKIT_PUBLIC_KEY: z.string().optional(),
+  IMAGEKIT_PRIVATE_KEY: z.string().optional(),
+  IMAGEKIT_URL_ENDPOINT: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);
