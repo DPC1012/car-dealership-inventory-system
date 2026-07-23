@@ -39,7 +39,7 @@ export async function loginUser(input: LoginInput): Promise<SafeUser> {
     where: { email: input.email },
   });
   if (!user) {
-    throw new UnauthorizedError('Invalid credentials');
+    throw new UnauthorizedError('No account found with this email. Please register first.');
   }
 
   const isValid = await verifyPassword(input.password, user.password);
