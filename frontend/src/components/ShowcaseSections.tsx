@@ -1,42 +1,38 @@
 import React from 'react';
 import { ArrowUpRight, Car, Shield, Wrench, DollarSign, Star, Clock, Phone, MapPin, ChevronRight } from 'lucide-react';
-import type { VehicleCategory, SearchFilters } from '../types';
+import type { Vehicle, VehicleCategory, SearchFilters } from '../types';
 
 interface ShowcaseSectionsProps {
+  vehicles: Vehicle[];
   onSelectCategory: (category: VehicleCategory) => void;
   onSearch: (filters: SearchFilters) => void;
   onOpenAuth: () => void;
 }
 
-const CATEGORY_CARDS: { category: VehicleCategory; label: string; count: string; image: string }[] = [
+const CATEGORY_CARDS: { category: VehicleCategory; label: string; image: string }[] = [
   {
     category: 'SEDAN',
     label: 'Executive Sedan',
-    count: '18 Available',
     image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=600&q=80',
   },
   {
     category: 'SUV',
     label: 'Luxury SUV',
-    count: '24 Available',
     image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80',
   },
   {
     category: 'COUPE',
     label: 'Sport Coupe',
-    count: '12 Available',
     image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=600&q=80',
   },
   {
     category: 'HATCHBACK',
     label: 'Hot Hatchback',
-    count: '8 Available',
     image: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=600&q=80',
   },
   {
     category: 'TRUCK',
     label: 'Performance Truck',
-    count: '6 Available',
     image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=600&q=80',
   },
 ];
@@ -72,10 +68,19 @@ const TESTIMONIALS = [
 ];
 
 export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
+  vehicles,
   onSelectCategory,
   onSearch,
   onOpenAuth,
 }) => {
+  const categoryCounts = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const v of vehicles) {
+      counts[v.category] = (counts[v.category] || 0) + 1;
+    }
+    return counts;
+  }, [vehicles]);
+
   return (
     <div className="space-y-16 py-4">
       {/* 1. Browse by Category Section (DESIGN_SYSTEM.md Section 12) */}
@@ -103,6 +108,7 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
                 <img
                   src={item.image}
                   alt={item.label}
+                  loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -112,7 +118,7 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
                     {item.label}
                   </span>
                   <span className="text-[11px] font-sans block mt-0.5" style={{ color: 'var(--color-secondary-text)' }}>
-                    {item.count}
+                    {categoryCounts[item.category] || 0} Available
                   </span>
                 </div>
                 <div className="w-7 h-7 rounded-full border flex items-center justify-center group-hover:bg-[#111111] group-hover:text-white transition-colors theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)' }}>
@@ -162,6 +168,7 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
           <img
             src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1000&q=80"
             alt="Showroom Services"
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         </div>
@@ -190,7 +197,7 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
             </div>
 
             <div className="border p-5 rounded-2xl space-y-1.5 theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-              <div className="flex items-center gap-2 text-[#22C55E]">
+              <div className="flex items-center gap-2" style={{ color: 'var(--color-success)' }}>
                 <DollarSign className="w-5 h-5" />
                 <h4 className="font-heading text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-text)' }}>
                   Sell Your Car
@@ -202,7 +209,7 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
             </div>
 
             <div className="border p-5 rounded-2xl space-y-1.5 theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-              <div className="flex items-center gap-2 text-[#3B82F6]">
+              <div className="flex items-center gap-2" style={{ color: 'var(--color-info)' }}>
                 <Shield className="w-5 h-5" />
                 <h4 className="font-heading text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-text)' }}>
                   Certified Showroom
@@ -214,7 +221,7 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
             </div>
 
             <div className="border p-5 rounded-2xl space-y-1.5 theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-              <div className="flex items-center gap-2 text-[#F59E0B]">
+              <div className="flex items-center gap-2" style={{ color: 'var(--color-warning)' }}>
                 <Wrench className="w-5 h-5" />
                 <h4 className="font-heading text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-text)' }}>
                   Auto Services
@@ -228,45 +235,19 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
         </div>
       </section>
 
-      {/* 4. Dual Call-to-Action Banners */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="relative rounded-3xl overflow-hidden bg-[#111111] p-8 min-h-[220px] flex flex-col justify-between group shadow-md text-white theme-transition">
-          <div className="absolute inset-0 z-0">
-            <img
-              src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1000&q=80"
-              alt="Sell Car"
-              className="w-full h-full object-cover brightness-[0.35] group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-          <div className="relative z-10 space-y-2">
-            <h3 className="font-heading text-2xl font-bold tracking-tight">
-              Do You Want to Sell a Car?
-            </h3>
-            <p className="text-xs text-white/80 font-sans max-w-sm">
-              We are committed to providing our customers with exceptional service and top-tier valuations.
-            </p>
-          </div>
-          <div className="relative z-10 pt-4">
-            <button
-              onClick={onOpenAuth}
-              className="bg-white text-[#111111] hover:bg-white/90 py-2.5 px-6 rounded-full text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2 transition-colors"
-            >
-              <span>Get Started</span>
-              <ArrowUpRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        <div className="relative rounded-3xl overflow-hidden bg-[#111111] p-8 min-h-[220px] flex flex-col justify-between group shadow-md text-white theme-transition">
+      {/* 4. Call-to-Action Banner */}
+      <section>
+        <div className="relative rounded-3xl overflow-hidden bg-[#111111] p-8 sm:p-12 min-h-[220px] flex flex-col justify-between group shadow-md text-white theme-transition">
           <div className="absolute inset-0 z-0">
             <img
               src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1000&q=80"
               alt="Looking for Car"
+              loading="lazy"
               className="w-full h-full object-cover brightness-[0.35] group-hover:scale-105 transition-transform duration-500"
             />
           </div>
           <div className="relative z-10 space-y-2">
-            <h3 className="font-heading text-2xl font-bold tracking-tight">
+            <h3 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">
               Are You Looking For a Car?
             </h3>
             <p className="text-xs text-white/80 font-sans max-w-sm">
@@ -299,16 +280,16 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TESTIMONIALS.map((t, idx) => (
             <div key={idx} className="border rounded-3xl p-6 flex flex-col justify-between space-y-4 shadow-sm theme-transition" style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}>
-              <div className="flex gap-1 text-[#F59E0B]">
+              <div className="flex gap-1" style={{ color: 'var(--color-warning)' }}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-[#F59E0B]" />
+                  <Star key={i} className="w-4 h-4" style={{ fill: 'var(--color-warning)' }} />
                 ))}
               </div>
               <p className="text-xs font-sans leading-relaxed italic" style={{ color: 'var(--color-primary-text)', opacity: 0.8 }}>
                 "{t.quote}"
               </p>
               <div className="flex items-center gap-3 pt-3 border-t" style={{ borderColor: 'var(--color-divider)' }}>
-                <img src={t.avatar} alt={t.author} className="w-10 h-10 rounded-full object-cover" />
+                <img src={t.avatar} alt={t.author} loading="lazy" className="w-10 h-10 rounded-full object-cover" />
                 <div>
                   <h4 className="font-heading text-xs font-bold" style={{ color: 'var(--color-primary-text)' }}>{t.author}</h4>
                   <p className="text-[10px] font-sans" style={{ color: 'var(--color-secondary-text)' }}>{t.title}</p>

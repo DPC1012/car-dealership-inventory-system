@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { SearchFilters as SearchFiltersType, VehicleCategory } from '../types';
 import { Search, RotateCcw, Filter } from 'lucide-react';
 
@@ -19,9 +19,26 @@ const CATEGORIES: VehicleCategory[] = [
 ];
 
 export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange, onClear }) => {
+  const [makeInput, setMakeInput] = useState(filters.make || '');
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setMakeInput(filters.make || '');
+  }, [filters.make]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
 
   const handleMakeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...filters, make: e.target.value });
+    const value = e.target.value;
+    setMakeInput(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      onChange({ ...filters, make: value || undefined });
+    }, 300);
   };
 
   const handleCategorySelect = (category: VehicleCategory) => {
@@ -76,7 +93,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
             <Search className="w-4 h-4 absolute left-3.5 top-3 theme-transition" style={{ color: 'var(--color-muted-text)' }} />
             <input
               type="text"
-              value={filters.make || ''}
+              value={makeInput}
               onChange={handleMakeChange}
               placeholder="e.g. Porsche, BMW, Audi..."
               className="w-full rounded-2xl pl-10 pr-4 py-2.5 text-xs outline-none font-sans transition-colors theme-transition"

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchApi } from '../config/api';
 import type { User } from '../types';
 import { X, Lock, Mail, User as UserIcon, AlertCircle } from 'lucide-react';
+import { ModalPortal } from './ModalPortal';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -17,18 +18,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,22 +47,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div
-      onClick={loading ? undefined : onClose}
-      className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 theme-transition"
-      style={{ backgroundColor: 'var(--color-overlay)' }}
-    >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative animate-in theme-transition"
-        style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
+        onClick={loading ? undefined : onClose}
+        className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4 theme-transition"
+        style={{ backgroundColor: 'var(--color-overlay)' }}
       >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          className="rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative animate-in theme-transition"
+          style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', border: '1px solid var(--color-border)' }}
+        >
         <button
           onClick={onClose}
           className="absolute top-5 right-5 transition-colors p-1"
           style={{ color: 'var(--color-muted-text)' }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--color-primary-text)'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--color-muted-text)'; }}
         >
           <X className="w-5 h-5" />
         </button>
@@ -129,13 +119,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLoginTab && (
             <div>
-              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+              <label htmlFor="auth-name" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Full Name <span style={{ color: 'var(--color-error)' }}>*</span>
               </label>
               <div className="relative">
                 <UserIcon className="w-4 h-4 absolute left-3.5 top-3" style={{ color: 'var(--color-muted-text)' }} />
                 <input
                   type="text"
+                  id="auth-name"
+                  autoComplete="name"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -150,13 +142,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           )}
 
           <div>
-            <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+            <label htmlFor="auth-email" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
               Email Address <span style={{ color: 'var(--color-error)' }}>*</span>
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 absolute left-3.5 top-3" style={{ color: 'var(--color-muted-text)' }} />
               <input
                 type="email"
+                id="auth-email"
+                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -170,13 +164,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           <div>
-            <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+            <label htmlFor="auth-password" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
               Password (Min 8 Characters) <span style={{ color: 'var(--color-error)' }}>*</span>
             </label>
             <div className="relative">
               <Lock className="w-4 h-4 absolute left-3.5 top-3" style={{ color: 'var(--color-muted-text)' }} />
               <input
                 type="password"
+                id="auth-password"
+                autoComplete={isLoginTab ? 'current-password' : 'new-password'}
                 required
                 minLength={8}
                 value={password}
@@ -194,14 +190,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-12 text-white rounded-full text-xs font-bold tracking-wider uppercase transition-all shadow-md"
-              style={{ backgroundColor: 'var(--color-primary-dark)' }}
+              className="w-full h-12 rounded-full text-xs font-bold tracking-wider uppercase transition-all shadow-md"
+              style={{ backgroundColor: 'var(--color-primary-dark)', color: 'var(--color-bg)' }}
             >
               {loading ? 'Processing...' : isLoginTab ? 'Sign In to Showroom' : 'Create Account'}
             </button>
           </div>
         </form>
+        </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

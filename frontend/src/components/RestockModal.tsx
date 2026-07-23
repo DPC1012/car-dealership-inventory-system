@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Vehicle } from '../types';
 import { X, PlusCircle, AlertCircle } from 'lucide-react';
+import { ModalPortal } from './ModalPortal';
 
 interface RestockModalProps {
   vehicle: Vehicle | null;
@@ -19,16 +20,6 @@ export const RestockModal: React.FC<RestockModalProps> = ({
 }) => {
   const [quantity, setQuantity] = useState<number>(5);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -56,26 +47,27 @@ export const RestockModal: React.FC<RestockModalProps> = ({
   };
 
   return (
-    <div
-      onClick={isLoading ? undefined : onClose}
-      className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4"
-      style={{ backgroundColor: 'var(--color-overlay)' }}
-    >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="rounded-3xl p-6 max-w-sm w-full shadow-2xl relative animate-in theme-transition"
-        style={{
-          backgroundColor: 'var(--color-card)',
-          border: '1px solid var(--color-border)',
-          color: 'var(--color-primary-text)',
-        }}
+        onClick={isLoading ? undefined : onClose}
+        className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4"
+        style={{ backgroundColor: 'var(--color-overlay)' }}
       >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          className="rounded-3xl p-6 max-w-sm w-full shadow-2xl relative animate-in theme-transition"
+          style={{
+            backgroundColor: 'var(--color-card)',
+            border: '1px solid var(--color-border)',
+            color: 'var(--color-primary-text)',
+          }}
+        >
         <button
           onClick={onClose}
           className="absolute top-5 right-5 transition-colors p-1"
           style={{ color: 'var(--color-muted-text)' }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-primary-text)'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-muted-text)'; }}
         >
           <X className="w-5 h-5" />
         </button>
@@ -100,11 +92,12 @@ export const RestockModal: React.FC<RestockModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+            <label htmlFor="rs-quantity" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
               Quantity to Add (Positive Integer)
             </label>
             <input
               type="number"
+              id="rs-quantity"
               required
               min={1}
               value={quantity}
@@ -146,7 +139,8 @@ export const RestockModal: React.FC<RestockModalProps> = ({
             </button>
           </div>
         </form>
+        </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

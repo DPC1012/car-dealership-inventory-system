@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Vehicle, VehicleCategory, VehicleFormData } from '../types';
 import { vehicleApi } from '../services/api';
 import { X, AlertCircle, Upload } from 'lucide-react';
+import { ModalPortal } from './ModalPortal';
 
 interface VehicleModalProps {
   isOpen: boolean;
@@ -38,16 +39,6 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
     if (initialData) {
       setMake(initialData.make);
       setModel(initialData.model);
@@ -81,8 +72,6 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
       setUploading(false);
     }
   };
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,22 +112,23 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
   const inputClasses = "w-full rounded-2xl px-4 py-2.5 text-xs outline-none font-sans";
 
   return (
-    <div
-      onClick={isLoading ? undefined : onClose}
-      className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4"
-      style={{ backgroundColor: 'var(--color-overlay)' }}
-    >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative animate-in theme-transition"
-        style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)' }}
+        onClick={isLoading ? undefined : onClose}
+        className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4"
+        style={{ backgroundColor: 'var(--color-overlay)' }}
       >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          className="rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative animate-in theme-transition"
+          style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)' }}
+        >
         <button
           onClick={onClose}
           className="absolute top-5 right-5 transition-colors p-1"
           style={{ color: 'var(--color-muted-text)' }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary-text)')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted-text)')}
         >
           <X className="w-5 h-5" />
         </button>
@@ -160,11 +150,12 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+              <label htmlFor="vm-make" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Make (Manufacturer)
               </label>
               <input
                 type="text"
+                id="vm-make"
                 required
                 value={make}
                 onChange={(e) => setMake(e.target.value)}
@@ -175,11 +166,12 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
             </div>
 
             <div>
-              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+              <label htmlFor="vm-model" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Model Name
               </label>
               <input
                 type="text"
+                id="vm-model"
                 required
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
@@ -191,10 +183,11 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
           </div>
 
           <div>
-            <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+            <label htmlFor="vm-category" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
               Vehicle Category
             </label>
             <select
+              id="vm-category"
               value={category}
               onChange={(e) => setCategory(e.target.value as VehicleCategory)}
               className={inputClasses}
@@ -210,11 +203,12 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+              <label htmlFor="vm-price" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Price (INR ₹)
               </label>
               <input
                 type="number"
+                id="vm-price"
                 required
                 min={1}
                 value={price}
@@ -226,11 +220,12 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
             </div>
 
             <div>
-              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+              <label htmlFor="vm-quantity" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Initial Stock Quantity
               </label>
               <input
                 type="number"
+                id="vm-quantity"
                 required
                 min={1}
                 value={quantity}
@@ -244,13 +239,14 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
 
           {/* Vehicle Image Upload / URL Field */}
           <div>
-            <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
+            <label htmlFor="vm-imageurl" className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
               Vehicle Image (File Upload or Image URL)
             </label>
 
             <div className="flex gap-2 mb-2">
               <input
                 type="url"
+                id="vm-imageurl"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://ik.imagekit.io/... or upload file below"
@@ -310,7 +306,8 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
             </button>
           </div>
         </form>
+        </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

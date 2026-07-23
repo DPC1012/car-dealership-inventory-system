@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronRight, ShieldCheck, Car, Award, Zap } from 'lucide-react';
+import { Search } from 'lucide-react';
 import type { VehicleCategory, SearchFilters } from '../types';
 
 interface HeroBannerProps {
   onSearch: (filters: SearchFilters) => void;
   activeCategory?: VehicleCategory | '';
+  manufacturers: string[];
 }
 
-export const HeroBanner: React.FC<HeroBannerProps> = ({ onSearch, activeCategory }) => {
+export const HeroBanner: React.FC<HeroBannerProps> = ({ onSearch, activeCategory, manufacturers }) => {
   const [selectedMake, setSelectedMake] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<VehicleCategory | ''>('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -102,13 +103,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSearch, activeCategory
                   className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-3 text-sm font-sans text-[#18181B] focus:border-[#111111] focus:bg-white outline-none transition-all"
                 >
                   <option value="">All Luxury Brands</option>
-                  <option value="Porsche">Porsche</option>
-                  <option value="BMW">BMW</option>
-                  <option value="Mercedes-Benz">Mercedes-Benz</option>
-                  <option value="Audi">Audi</option>
-                  <option value="Range Rover">Range Rover</option>
-                  <option value="Tesla">Tesla</option>
-                  <option value="Ford">Ford</option>
+                  {manufacturers.sort().map((make) => (
+                    <option key={make} value={make}>{make}</option>
+                  ))}
                 </select>
               </div>
 

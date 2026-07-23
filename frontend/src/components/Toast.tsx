@@ -16,7 +16,7 @@ interface ToastProps {
 
 export const ToastContainer: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none theme-transition">
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none theme-transition" role="status" aria-live="polite">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
       ))}
@@ -61,6 +61,7 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
   return (
     <div
       className={`pointer-events-auto border rounded-md p-3.5 flex items-start gap-3 shadow-xl transition-all duration-300 animate-slide-up`}
+      role={toast.type === 'error' ? 'alert' : 'status'}
       style={{
         backgroundColor: styleConfig.bg,
         borderColor: `${styleConfig.border}66`,
@@ -74,8 +75,6 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
         onClick={() => onDismiss(toast.id)}
         className="shrink-0 transition-colors"
         style={{ color: 'var(--color-muted-text)' }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary-text)')}
-        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted-text)')}
       >
         <X className="w-4 h-4" />
       </button>

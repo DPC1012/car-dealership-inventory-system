@@ -1,9 +1,12 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SearchFilters } from '../SearchFilters';
 import { ThemeProvider } from '../../context/ThemeContext';
 
 describe('SearchFilters Component', () => {
+  beforeEach(() => { vi.useFakeTimers(); });
+  afterEach(() => { vi.useRealTimers(); });
+
   it('renders search input, category chips, and price inputs', () => {
     render(
       <ThemeProvider>
@@ -21,7 +24,7 @@ describe('SearchFilters Component', () => {
     expect(screen.getByPlaceholderText(/1000000/i)).toBeInTheDocument();
   });
 
-  it('calls onChange when typing in make search input', () => {
+  it('calls onChange after debounce when typing in make search input', () => {
     const handleChange = vi.fn();
     render(
       <ThemeProvider>
@@ -36,6 +39,11 @@ describe('SearchFilters Component', () => {
     const input = screen.getByPlaceholderText(/e.g. Porsche, BMW/i);
     fireEvent.change(input, { target: { value: 'Porsche' } });
 
+    // Not called immediately
+    expect(handleChange).not.toHaveBeenCalled();
+
+    // Called after 300ms debounce
+    act(() => { vi.advanceTimersByTime(300); });
     expect(handleChange).toHaveBeenCalledWith({ make: 'Porsche' });
   });
 

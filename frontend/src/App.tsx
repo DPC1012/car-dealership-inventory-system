@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -160,6 +160,16 @@ export const AppContent: React.FC = () => {
     purchaseMutation.mutate(vehicle.id);
   };
 
+  const manufacturers = useMemo(() => {
+    return [...new Set(vehicles.map(v => v.make))];
+  }, [vehicles]);
+
+  const scrollToInventory = () => {
+    setTimeout(() => {
+      document.getElementById('showroom-inventory')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans theme-transition" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-primary-text)' }}>
       <Navbar
@@ -170,8 +180,12 @@ export const AppContent: React.FC = () => {
       <main className="max-w-[1280px] mx-auto px-4 sm:px-8 pt-6 pb-12 flex-1 w-full space-y-12">
         {/* Luxury Landing Hero Banner & Floating Search */}
         <HeroBanner
-          onSearch={(newFilters) => setFilters((prev) => ({ ...prev, ...newFilters }))}
+          onSearch={(newFilters) => {
+            setFilters((prev) => ({ ...prev, ...newFilters }));
+            scrollToInventory();
+          }}
           activeCategory={filters.category}
+          manufacturers={manufacturers}
         />
 
         {/* Showroom Inventory Headline & Filters */}
@@ -245,7 +259,7 @@ export const AppContent: React.FC = () => {
                 onEdit={handleOpenEditVehicle}
                 onDelete={(id) => deleteMutation.mutate(id)}
                 onRestock={handleOpenRestock}
-                isPurchasing={purchaseMutation.isPending}
+                isPurchasing={purchaseMutation.isPending && purchaseMutation.variables === vehicle.id}
               />
             ))}
           </div>
@@ -253,8 +267,15 @@ export const AppContent: React.FC = () => {
 
         {/* Reference Image Inspired Showcase Sections & Rich Footer */}
         <ShowcaseSections
-          onSelectCategory={(cat) => setFilters((prev) => ({ ...prev, category: cat }))}
-          onSearch={(newFilters) => setFilters((prev) => ({ ...prev, ...newFilters }))}
+          vehicles={vehicles}
+          onSelectCategory={(cat) => {
+            setFilters((prev) => ({ ...prev, category: cat }));
+            scrollToInventory();
+          }}
+          onSearch={(newFilters) => {
+            setFilters((prev) => ({ ...prev, ...newFilters }));
+            scrollToInventory();
+          }}
           onOpenAuth={() => setIsAuthModalOpen(true)}
         />
       </main>
