@@ -118,4 +118,16 @@ Built the modern single-page React application conforming to `DESIGN_SYSTEM.md` 
   - `VehicleCard.test.tsx`: Verifies vehicle spec rendering, INR price formatting, and asserts that the Purchase button is strictly disabled with `SOLD OUT` label when `quantity === 0`.
 - **Granular Git Commits:** Committed frontend in small conventional commits (`style:`, `feat:`) each carrying the `Co-authored-by: Claude <noreply@anthropic.com>` trailer.
 
+---
+
+## Session 6 — Multer + ImageKit Media Upload Feature (R-G-R Cycle) (2026-07-23)
+
+Designed and implemented vehicle image uploads using Multer in-memory storage (`multer.memoryStorage()`) and ImageKit Node.js SDK following strict Red-Green-Refactor commits:
+
+- **Domain Glossary (`CONTEXT.md`):** Updated domain glossary defining `Media Asset (Vehicle Image)` hosted via ImageKit CDN.
+- **Red State Commit (`test(media): … (RED)`):** Authored `backend/tests/integration/vehicles.media.test.ts` asserting authentication (`401`), admin authorization (`403`), and missing file validation (`400`) on `POST /api/vehicles/upload-image`. Verified test failure at `404` prior to mounting route.
+- **Green State Commit (`feat(media): … (GREEN)`):** Added Prisma migration `20260723062956_add_vehicle_image_url` adding `imageUrl String?` to `Vehicle`, created ImageKit helper (`backend/src/lib/imagekit.ts`), Multer memory storage middleware (`backend/src/middleware/upload.middleware.ts`), service, controller, and routes. Verified tests passing `GREEN`.
+- **Frontend Media UI Commit (`feat(frontend-media): …`):** Updated `VehicleCard` to render vehicle images with fallback showroom styling, added file upload button & live thumbnail preview in `VehicleModal`, and implemented multipart `FormData` API client helper.
+
+
 
