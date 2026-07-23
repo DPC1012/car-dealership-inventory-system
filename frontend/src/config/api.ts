@@ -13,7 +13,9 @@ export async function fetchApi<T>(
     ...(options.headers as Record<string, string>),
   };
 
-  if (token) {
+  const isAuthEndpoint = endpoint.startsWith('/auth/');
+
+  if (token && !isAuthEndpoint) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
