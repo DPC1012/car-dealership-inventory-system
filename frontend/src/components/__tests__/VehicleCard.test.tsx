@@ -42,7 +42,7 @@ describe('VehicleCard Component', () => {
     };
 
     localStorage.setItem('token', 'mock-jwt-token');
-    localStorage.setItem('user', JSON.stringify({ id: 'u1', email: 'test@example.com', role: 'USER' }));
+    localStorage.setItem('user', JSON.stringify({ id: 'u1', name: 'Test User', email: 'test@example.com', role: 'USER' }));
 
     render(
       <AuthProvider>

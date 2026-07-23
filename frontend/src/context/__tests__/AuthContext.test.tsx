@@ -14,6 +14,7 @@ const TestComponent = () => {
         onClick={() =>
           login('mock-jwt-token', {
             id: 'admin-1',
+            name: 'Admin User',
             email: 'admin@dealership.com',
             role: 'ADMIN',
             createdAt: '',

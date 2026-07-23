@@ -62,7 +62,7 @@ export const RestockModal: React.FC<RestockModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-[#E5E7EB] rounded-3xl p-6 max-w-sm w-full shadow-2xl relative text-[#18181B] animate-in fade-in zoom-in duration-200"
+        className="bg-white border border-[#E5E7EB] rounded-3xl p-6 max-w-sm w-full shadow-2xl relative text-[#18181B] animate-in"
       >
         <button
           onClick={onClose}

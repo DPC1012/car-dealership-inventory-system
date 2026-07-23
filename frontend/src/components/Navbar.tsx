@@ -71,7 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuth, onOpenAddVehicle }) 
                 ) : (
                   <UserIcon className="w-4 h-4 text-[#22C55E]" />
                 )}
-                <span className="font-medium hidden sm:inline">{user?.email}</span>
+                <span className="font-medium hidden sm:inline">{user?.name || user?.email}</span>
                 <span className="font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#111111] text-white">
                   {user?.role}
                 </span>

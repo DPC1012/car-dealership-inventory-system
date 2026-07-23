@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchApi } from '../config/api';
 import type { User } from '../types';
-import { X, Lock, Mail, AlertCircle } from 'lucide-react';
+import { X, Lock, Mail, User, AlertCircle } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -12,6 +12,7 @@ interface AuthModalProps {
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { login } = useAuth();
   const [isLoginTab, setIsLoginTab] = useState(true);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +37,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
 
     const endpoint = isLoginTab ? '/auth/login' : '/auth/register';
-    const payload = { email, password };
+    const payload = isLoginTab ? { email, password } : { name, email, password };
 
     try {
       const res = await fetchApi<{ token: string; user: User }>(endpoint, {
@@ -46,6 +47,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
       login(res.token, res.user);
       onClose();
+      setName('');
       setEmail('');
       setPassword('');
     } catch (err: any) {
@@ -62,7 +64,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-[#18181B] animate-in fade-in zoom-in duration-200"
+        className="bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-[#18181B] animate-in"
       >
         {/* Close Button */}
         <button
@@ -89,6 +91,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             onClick={() => {
               setIsLoginTab(true);
               setError(null);
+              setName('');
             }}
             className={`font-heading text-xs tracking-wider uppercase pb-2.5 px-4 border-b-2 font-bold transition-colors ${
               isLoginTab
@@ -124,6 +127,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
         {/* Auth Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLoginTab && (
+            <div>
+              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+                Full Name <span className="text-[#EF4444]">*</span>
+              </label>
+              <div className="relative">
+                <User className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-3" />
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="John Doe"
+                  className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl pl-10 pr-4 py-2.5 text-sm text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
+                />
+              </div>
+            </div>
+          )}
+
           <div>
             <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
               Email Address <span className="text-[#EF4444]">*</span>
