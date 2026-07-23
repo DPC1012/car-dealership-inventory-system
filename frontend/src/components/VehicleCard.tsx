@@ -84,15 +84,13 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           </div>
         </div>
 
-        {/* Vehicle Title & Specs */}
+        {/* Vehicle Title */}
         <h3 className="font-heading text-xl font-bold text-[#18181B] tracking-tight group-hover:text-[#111111] transition-colors">
           {vehicle.make} {vehicle.model}
         </h3>
 
         <div className="flex items-center gap-2 text-xs text-[#6B7280] font-sans mt-1 mb-3">
-          <span>2026 Model</span>
-          <span>•</span>
-          <span>Automatic</span>
+          <span>{vehicle.category}</span>
           <span>•</span>
           <span>Certified Showroom</span>
         </div>
@@ -108,21 +106,30 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       {/* Action Buttons (Primary 48px Pill Button per Section 7) */}
       <div className="mt-4 space-y-2">
         {!isAdmin && (
-          <button
-            onClick={() => onPurchase(vehicle)}
-            disabled={isOutOfStock || isPurchasing || !isAuthenticated}
-            className="btn-primary w-full flex items-center justify-center gap-2 shadow-sm"
-            title={!isAuthenticated ? 'Please sign in to purchase' : undefined}
-          >
-            <ShoppingBag className="w-4 h-4" />
-            {isPurchasing
-              ? 'Processing...'
-              : isOutOfStock
-              ? 'SOLD OUT'
-              : !isAuthenticated
-              ? 'Sign In to Purchase'
-              : 'Purchase Vehicle'}
-          </button>
+          <>
+            {!isAuthenticated ? (
+              <button
+                onClick={() => onPurchase(vehicle)}
+                className="btn-primary w-full flex items-center justify-center gap-2 shadow-sm"
+              >
+                <ShoppingBag className="w-4 h-4" />
+                Sign In to Purchase
+              </button>
+            ) : (
+              <button
+                onClick={() => onPurchase(vehicle)}
+                disabled={isOutOfStock || isPurchasing}
+                className="btn-primary w-full flex items-center justify-center gap-2 shadow-sm"
+              >
+                <ShoppingBag className="w-4 h-4" />
+                {isPurchasing
+                  ? 'Processing...'
+                  : isOutOfStock
+                  ? 'SOLD OUT'
+                  : 'Purchase Vehicle'}
+              </button>
+            )}
+          </>
         )}
 
         {/* Admin Controls */}

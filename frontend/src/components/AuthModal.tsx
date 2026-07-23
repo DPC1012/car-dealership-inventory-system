@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchApi } from '../config/api';
 import type { User } from '../types';
-import { X, Lock, Mail, User as UserIcon, AlertCircle } from 'lucide-react';
+import { X, Lock, Mail, AlertCircle } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -12,11 +12,20 @@ interface AuthModalProps {
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { login } = useAuth();
   const [isLoginTab, setIsLoginTab] = useState(true);
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -24,17 +33,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     e.preventDefault();
     setError(null);
 
-    if (!isLoginTab && !name.trim()) {
-      setError('Name is required for registration');
-      return;
-    }
-
     setLoading(true);
 
     const endpoint = isLoginTab ? '/auth/login' : '/auth/register';
-    const payload = isLoginTab
-      ? { email, password }
-      : { email, password };
+    const payload = { email, password };
 
     try {
       const res = await fetchApi<{ token: string; user: User }>(endpoint, {
@@ -44,7 +46,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
       login(res.token, res.user);
       onClose();
-      setName('');
       setEmail('');
       setPassword('');
     } catch (err: any) {
@@ -55,38 +56,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-[#1B1E24] border border-[#333846] rounded-xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative transition-all">
+    <div
+      onClick={loading ? undefined : onClose}
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-[#18181B] animate-in fade-in zoom-in duration-200"
+      >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#454C5C] hover:text-[#F3F0E9] transition-colors p-1"
+          className="absolute top-5 right-5 text-[#9CA3AF] hover:text-[#18181B] transition-colors p-1"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Headline */}
-        <h2 className="font-signage text-2xl font-bold tracking-wide text-[#E3A143] uppercase mb-1">
-          {isLoginTab ? 'Welcome Back' : 'Join DriveLine'}
+        <h2 className="font-heading text-2xl font-bold tracking-tight text-[#18181B] mb-1">
+          {isLoginTab ? 'Welcome Back' : 'Join Roadstead Motors'}
         </h2>
-        <p className="text-xs text-[#F3F0E9]/60 mb-5 font-sans">
+        <p className="text-xs text-[#6B7280] mb-6 font-sans">
           {isLoginTab
             ? 'Sign in to access your saved inventory and purchase vehicles.'
             : 'Register your account to start buying luxury vehicles today.'}
         </p>
 
         {/* Tabs */}
-        <div className="flex border-b border-[#333846] mb-6">
+        <div className="flex border-b border-[#E5E7EB] mb-6">
           <button
             type="button"
             onClick={() => {
               setIsLoginTab(true);
               setError(null);
             }}
-            className={`font-signage text-xs tracking-wider uppercase pb-2.5 px-4 border-b-2 font-semibold transition-colors ${
+            className={`font-heading text-xs tracking-wider uppercase pb-2.5 px-4 border-b-2 font-bold transition-colors ${
               isLoginTab
-                ? 'border-[#E3A143] text-[#E3A143]'
-                : 'border-transparent text-[#454C5C] hover:text-[#F3F0E9]'
+                ? 'border-[#111111] text-[#111111]'
+                : 'border-transparent text-[#9CA3AF] hover:text-[#18181B]'
             }`}
           >
             Sign In
@@ -97,10 +104,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               setIsLoginTab(false);
               setError(null);
             }}
-            className={`font-signage text-xs tracking-wider uppercase pb-2.5 px-4 border-b-2 font-semibold transition-colors ${
+            className={`font-heading text-xs tracking-wider uppercase pb-2.5 px-4 border-b-2 font-bold transition-colors ${
               !isLoginTab
-                ? 'border-[#E3A143] text-[#E3A143]'
-                : 'border-transparent text-[#454C5C] hover:text-[#F3F0E9]'
+                ? 'border-[#111111] text-[#111111]'
+                : 'border-transparent text-[#9CA3AF] hover:text-[#18181B]'
             }`}
           >
             Register Account
@@ -109,7 +116,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-5 bg-[#2C1E1C] border border-[#C4574A]/40 rounded-lg p-3.5 flex items-start gap-2.5 text-xs text-[#C4574A]">
+          <div className="mb-5 bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-[#EF4444]">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -117,48 +124,29 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
         {/* Auth Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {!isLoginTab && (
-            <div>
-              <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
-                Full Name <span className="text-[#C4574A]">*</span>
-              </label>
-              <div className="relative">
-                <UserIcon className="w-4 h-4 text-[#454C5C] absolute left-3 top-3" />
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. John Doe"
-                  className="w-full bg-[#252932] border border-[#333846] rounded-lg pl-9 pr-3 py-2.5 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
-                />
-              </div>
-            </div>
-          )}
-
           <div>
-            <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
-              Email Address <span className="text-[#C4574A]">*</span>
+            <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+              Email Address <span className="text-[#EF4444]">*</span>
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-[#454C5C] absolute left-3 top-3" />
+              <Mail className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-3" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="user@example.com"
-                className="w-full bg-[#252932] border border-[#333846] rounded-lg pl-9 pr-3 py-2.5 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl pl-10 pr-4 py-2.5 text-sm text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
               />
             </div>
           </div>
 
           <div>
-            <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
-              Password (Min 8 Characters) <span className="text-[#C4574A]">*</span>
+            <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+              Password (Min 8 Characters) <span className="text-[#EF4444]">*</span>
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-[#454C5C] absolute left-3 top-3" />
+              <Lock className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-3" />
               <input
                 type="password"
                 required
@@ -166,7 +154,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#252932] border border-[#333846] rounded-lg pl-9 pr-3 py-2.5 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl pl-10 pr-4 py-2.5 text-sm text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
               />
             </div>
           </div>
@@ -175,7 +163,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-3 rounded-lg text-xs font-bold tracking-wider uppercase shadow-lg hover:shadow-amber-500/10"
+              className="w-full h-12 bg-[#111111] text-white hover:bg-[#27272A] rounded-full text-xs font-bold tracking-wider uppercase transition-all shadow-md"
             >
               {loading ? 'Processing...' : isLoginTab ? 'Sign In to Showroom' : 'Create Account'}
             </button>

@@ -1,100 +1,152 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @layer base {
   :root {
-    --color-graphite-950: #13151A;
-    --color-graphite-900: #1B1E24;
-    --color-graphite-800: #252932;
-    --color-graphite-700: #333846;
-    --color-graphite-600: #454C5C;
-    --color-cream: #F3F0E9;
-    --color-amber-400: #F0B65C;
-    --color-amber-500: #E3A143;
-    --color-amber-600: #C4832B;
-    --color-moss: #6FA787;
-    --color-moss-light: #1E2A24;
-    --color-rust: #C4574A;
-    --color-rust-light: #2C1E1C;
-    --color-chrome: #5B7A99;
-    --color-chrome-light: #1E262F;
-    --color-border: rgba(243, 240, 233, 0.10);
+    --color-bg: #FFFFFF;
+    --color-surface: #FAFAFA;
+    --color-surface-hover: #F5F5F5;
+    --color-card: #FFFFFF;
+    --color-primary-dark: #111111;
+    --color-primary-text: #18181B;
+    --color-secondary-text: #6B7280;
+    --color-muted-text: #9CA3AF;
+    --color-border: #E5E7EB;
+    --color-divider: #F3F4F6;
+
+    /* Semantic */
+    --color-success: #22C55E;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+    --color-info: #3B82F6;
   }
 
   body {
-    background-color: var(--color-graphite-950);
-    color: var(--color-cream);
-    font-family: 'Inter', sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-primary-text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
     margin: 0;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, .font-display, .font-signage {
-    font-family: 'Barlow Condensed', sans-serif;
+  h1, h2, h3, h4, .font-heading, .font-signage {
+    font-family: 'Manrope', system-ui, sans-serif;
   }
 }
 
-/* Custom utility classes based on DESIGN_SYSTEM.md */
-.bg-graphite-950 { background-color: var(--color-graphite-950); }
-.bg-graphite-900 { background-color: var(--color-graphite-900); }
-.bg-graphite-800 { background-color: var(--color-graphite-800); }
-.bg-graphite-700 { background-color: var(--color-graphite-700); }
-
-.border-graphite-700 { border-color: var(--color-graphite-700); }
-.border-graphite-600 { border-color: var(--color-graphite-600); }
-.border-showroom { border-color: var(--color-border); }
-
-.text-cream { color: var(--color-cream); }
-.text-amber-500 { color: var(--color-amber-500); }
-.text-amber-400 { color: var(--color-amber-400); }
-.text-moss { color: var(--color-moss); }
-.text-rust { color: var(--color-rust); }
-.text-chrome { color: var(--color-chrome); }
-.text-graphite-600 { color: var(--color-graphite-600); }
-
+/* Custom Design System Utility Classes */
 .btn-primary {
-  background-color: var(--color-amber-500);
-  color: var(--color-graphite-950);
-  font-family: 'Barlow Condensed', sans-serif;
+  background-color: #111111;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  border-radius: 9999px;
+  height: 48px;
+  padding-left: 24px;
+  padding-right: 24px;
   transition: all 0.2s ease;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: var(--color-amber-400);
+  background-color: #27272A;
 }
 
 .btn-primary:disabled {
-  background-color: var(--color-graphite-700);
-  color: var(--color-graphite-600);
+  background-color: #E5E7EB;
+  color: #9CA3AF;
   cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #18181B;
+  border: 1px solid #E5E7EB;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  border-radius: 9999px;
+  height: 48px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #F5F5F5;
+  border-color: #D1D5DB;
 }
 
 .btn-ghost {
   background-color: transparent;
-  color: var(--color-cream);
-  border: 1px solid var(--color-graphite-700);
+  color: #18181B;
+  border: 1px solid #E5E7EB;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
+  border-radius: 12px;
   transition: all 0.2s ease;
 }
 
 .btn-ghost:hover:not(:disabled) {
-  border-color: var(--color-amber-400);
-  color: var(--color-amber-400);
+  background-color: #F5F5F5;
+  border-color: #111111;
 }
 
-.card-showroom {
-  background-color: var(--color-graphite-900);
-  border: 1px solid var(--color-graphite-700);
-  border-radius: 8px;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+/* 20px Rounded Vehicle Card (DESIGN_SYSTEM.md Section 11) */
+.card-vehicle {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
 }
 
-.card-showroom:hover {
-  border-color: var(--color-graphite-600);
-  transform: translateY(-2px);
+.card-vehicle:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  border-color: #D1D5DB;
+}
+
+/* Shimmer Skeleton Animation */
+@keyframes shimmer {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+/* Modal entrance animation */
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-in {
+  animation: modal-in 0.2s ease-out;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.zoom-in {
+  animation: modal-in 0.2s ease-out;
+}
+
+/* Toast slide-up animation */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
 }

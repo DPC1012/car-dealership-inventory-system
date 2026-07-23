@@ -40,48 +40,48 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
     !!filters.make || !!filters.category || filters.minPrice !== undefined || filters.maxPrice !== undefined;
 
   return (
-    <div className="bg-[#1B1E24] border border-[#333846] rounded-md p-4 sm:p-5 mb-8">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white border border-[#E5E7EB] rounded-3xl p-6 shadow-sm mb-8 space-y-5">
+      <div className="flex items-center justify-between border-b border-[#F3F4F6] pb-3">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-[#E3A143]" />
-          <h3 className="font-signage text-sm font-semibold tracking-wider text-[#F3F0E9] uppercase">
-            Filter Inventory
+          <Filter className="w-4 h-4 text-[#111111]" />
+          <h3 className="font-heading text-sm font-bold tracking-wider text-[#18181B] uppercase">
+            Filter Showroom Inventory
           </h3>
         </div>
 
         {hasActiveFilters && (
           <button
             onClick={onClear}
-            className="btn-ghost px-2.5 py-1 text-[11px] font-signage uppercase tracking-wider rounded-sm flex items-center gap-1.5 text-[#F3F0E9]/70 hover:text-[#E3A143]"
+            className="px-3 py-1 text-xs font-medium text-[#6B7280] hover:text-[#111111] border border-[#E5E7EB] hover:border-[#111111] rounded-full flex items-center gap-1.5 transition-colors"
           >
             <RotateCcw className="w-3 h-3" />
-            Clear Filters
+            Reset Filters
           </button>
         )}
       </div>
 
       {/* Search Input & Price Inputs Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Make Search */}
         <div>
-          <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
-            Search Make / Model
+          <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+            Search Make
           </label>
           <div className="relative">
-            <Search className="w-4 h-4 text-[#454C5C] absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-3" />
             <input
               type="text"
               value={filters.make || ''}
               onChange={handleMakeChange}
-              placeholder="e.g. Porsche, BMW, Honda..."
-              className="w-full bg-[#252932] border border-[#333846] rounded-sm pl-9 pr-3 py-2 text-xs text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+              placeholder="e.g. Porsche, BMW, Audi..."
+              className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl pl-10 pr-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans transition-colors"
             />
           </div>
         </div>
 
         {/* Min Price */}
         <div>
-          <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+          <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
             Min Price (₹)
           </label>
           <input
@@ -89,13 +89,13 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
             value={filters.minPrice !== undefined ? filters.minPrice : ''}
             onChange={handleMinPriceChange}
             placeholder="e.g. 1000000"
-            className="w-full bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-xs text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+            className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans transition-colors"
           />
         </div>
 
         {/* Max Price */}
         <div>
-          <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+          <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
             Max Price (₹)
           </label>
           <input
@@ -103,14 +103,14 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
             value={filters.maxPrice !== undefined ? filters.maxPrice : ''}
             onChange={handleMaxPriceChange}
             placeholder="e.g. 5000000"
-            className="w-full bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-xs text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+            className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans transition-colors"
           />
         </div>
       </div>
 
       {/* Category Filter Badges */}
       <div>
-        <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1.5">
+        <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-2">
           Category
         </label>
         <div className="flex flex-wrap gap-2">
@@ -121,10 +121,10 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
                 key={cat}
                 type="button"
                 onClick={() => handleCategorySelect(cat)}
-                className={`font-signage text-[11px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-sm border transition-colors ${
+                className={`text-xs font-semibold tracking-wider uppercase px-3.5 py-1.5 rounded-full border transition-all ${
                   isSelected
-                    ? 'bg-[#252932] text-[#E3A143] border-[#E3A143]'
-                    : 'bg-[#252932] text-[#454C5C] border-[#333846] hover:border-[#454C5C] hover:text-[#F3F0E9]'
+                    ? 'bg-[#111111] text-white border-[#111111] shadow-sm'
+                    : 'bg-[#FAFAFA] text-[#6B7280] border-[#E5E7EB] hover:border-[#111111] hover:text-[#18181B]'
                 }`}
               >
                 {cat}

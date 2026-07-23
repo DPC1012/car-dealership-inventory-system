@@ -38,6 +38,16 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
     if (initialData) {
       setMake(initialData.make);
       setModel(initialData.model);
@@ -76,12 +86,22 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (!make.trim()) {
+      setError('Make is required');
+      return;
+    }
+    if (!model.trim()) {
+      setError('Model is required');
+      return;
+    }
     if (price === '' || price <= 0) {
       setError('Price must be a positive number');
       return;
     }
-    if (quantity === '' || quantity < 0) {
-      setError('Quantity cannot be negative');
+    if (quantity === '' || quantity < 1) {
+      setError('Quantity must be at least 1');
       return;
     }
 
@@ -101,22 +121,31 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-      <div className="bg-[#1B1E24] border border-[#333846] rounded-md p-6 max-w-lg w-full shadow-2xl relative">
+    <div
+      onClick={isLoading ? undefined : onClose}
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative text-[#18181B] animate-in fade-in zoom-in duration-200"
+      >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#454C5C] hover:text-[#F3F0E9] transition-colors"
+          className="absolute top-5 right-5 text-[#9CA3AF] hover:text-[#18181B] transition-colors p-1"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="font-signage text-2xl font-semibold tracking-wide text-[#E3A143] uppercase mb-6">
+        <h2 className="font-heading text-2xl font-bold tracking-tight text-[#18181B] mb-1">
           {initialData ? 'Update Vehicle Record' : 'Add New Vehicle to Inventory'}
         </h2>
+        <p className="text-xs text-[#6B7280] mb-6 font-sans">
+          Manage show-floor inventory attributes, pricing specifications, and photography CDN.
+        </p>
 
         {error && (
-          <div className="mb-4 bg-[#2C1E1C] border border-[#C4574A]/40 rounded-sm p-3 flex items-center gap-2 text-xs text-[#C4574A]">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="mb-5 bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-[#EF4444]">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
@@ -124,7 +153,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
                 Make (Manufacturer)
               </label>
               <input
@@ -133,12 +162,12 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={make}
                 onChange={(e) => setMake(e.target.value)}
                 placeholder="e.g. Porsche"
-                className="w-full bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
               />
             </div>
 
             <div>
-              <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
                 Model Name
               </label>
               <input
@@ -147,22 +176,22 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
                 placeholder="e.g. 911 GT3 RS"
-                className="w-full bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
               />
             </div>
           </div>
 
           <div>
-            <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+            <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
               Vehicle Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as VehicleCategory)}
-              className="w-full bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-sm text-[#F3F0E9] focus:border-[#E3A143] outline-none font-sans"
+              className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] focus:border-[#111111] focus:bg-white outline-none font-sans"
             >
               {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat} className="bg-[#1B1E24] text-[#F3F0E9]">
+                <option key={cat} value={cat}>
                   {cat}
                 </option>
               ))}
@@ -171,7 +200,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
                 Price (INR ₹)
               </label>
               <input
@@ -181,29 +210,29 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={price}
                 onChange={(e) => setPrice(e.target.value ? Number(e.target.value) : '')}
                 placeholder="e.g. 15000000"
-                className="w-full bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
               />
             </div>
 
             <div>
-              <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
                 Initial Stock Quantity
               </label>
               <input
                 type="number"
                 required
-                min={0}
+                min={1}
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value ? Number(e.target.value) : '')}
                 placeholder="e.g. 5"
-                className="w-full bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
               />
             </div>
           </div>
 
           {/* Vehicle Image Upload / URL Field */}
           <div>
-            <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+            <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
               Vehicle Image (File Upload or Image URL)
             </label>
 
@@ -213,10 +242,10 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://ik.imagekit.io/... or upload file below"
-                className="flex-1 bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+                className="flex-1 bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
               />
 
-              <label className="btn-ghost px-3 py-2 rounded-sm text-xs font-signage uppercase tracking-wider cursor-pointer flex items-center gap-1.5 hover:border-[#E3A143] hover:text-[#E3A143]">
+              <label className="px-4 py-2.5 rounded-full text-xs font-semibold text-[#18181B] border border-[#E5E7EB] hover:bg-[#FAFAFA] cursor-pointer flex items-center gap-1.5 transition-colors">
                 <Upload className="w-3.5 h-3.5" />
                 {uploading ? 'Uploading...' : 'Browse'}
                 <input
@@ -230,12 +259,12 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
             </div>
 
             {imageUrl && (
-              <div className="w-full h-32 rounded-sm bg-[#252932] border border-[#333846] overflow-hidden relative mt-2">
+              <div className="w-full h-36 rounded-2xl bg-[#FAFAFA] border border-[#E5E7EB] overflow-hidden relative mt-2">
                 <img src={imageUrl} alt="Vehicle Preview" className="w-full h-full object-cover" />
                 <button
                   type="button"
                   onClick={() => setImageUrl('')}
-                  className="absolute top-2 right-2 bg-black/70 text-white rounded-full p-1 hover:bg-[#C4574A]"
+                  className="absolute top-2 right-2 bg-black/70 text-white rounded-full p-1.5 hover:bg-[#EF4444]"
                   title="Remove Image"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -244,18 +273,22 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
             )}
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#333846]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#F3F4F6]">
             <button
               type="button"
               onClick={onClose}
-              className="btn-ghost px-4 py-2 rounded-sm text-xs font-medium"
+              className="px-5 py-2.5 rounded-full text-xs font-semibold text-[#6B7280] border border-[#E5E7EB] hover:bg-[#FAFAFA]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-primary px-5 py-2 rounded-sm text-xs font-semibold uppercase tracking-wider"
+              className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md ${
+                isLoading
+                  ? 'bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed'
+                  : 'bg-[#111111] text-white hover:bg-[#27272A]'
+              }`}
             >
               {isLoading ? 'Saving...' : initialData ? 'Update Vehicle' : 'Add Vehicle'}
             </button>

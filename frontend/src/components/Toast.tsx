@@ -68,7 +68,7 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
       </div>
       <button
         onClick={() => onDismiss(toast.id)}
-        className="text-[#454C5C] hover:text-[#F3F0E9] transition-colors shrink-0"
+        className="text-[#8A909C] hover:text-[#F3F0E9] transition-colors shrink-0"
       >
         <X className="w-4 h-4" />
       </button>

@@ -24,9 +24,8 @@ const queryClient = new QueryClient({
 });
 
 export const AppContent: React.FC = () => {
-  const queryClient = useQueryClient();
+  const queryClientInstance = useQueryClient();
   const { isAuthenticated } = useAuth();
-
 
   // Modals state
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -70,7 +69,7 @@ export const AppContent: React.FC = () => {
         'success',
         `Successfully purchased 1 unit of ${updatedVehicle.make} ${updatedVehicle.model}!`
       );
-      queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+      queryClientInstance.invalidateQueries({ queryKey: ['vehicles'] });
     },
     onError: (err: any) => {
       addToast('error', err.message || 'Purchase failed.');
@@ -81,7 +80,7 @@ export const AppContent: React.FC = () => {
     mutationFn: (data: VehicleFormData) => vehicleApi.createVehicle(data),
     onSuccess: (newVehicle) => {
       addToast('success', `${newVehicle.make} ${newVehicle.model} added to inventory!`);
-      queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+      queryClientInstance.invalidateQueries({ queryKey: ['vehicles'] });
     },
     onError: (err: any) => {
       addToast('error', err.message || 'Failed to add vehicle.');
@@ -93,7 +92,7 @@ export const AppContent: React.FC = () => {
       vehicleApi.updateVehicle(id, data),
     onSuccess: (updated) => {
       addToast('success', `${updated.make} ${updated.model} updated successfully!`);
-      queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+      queryClientInstance.invalidateQueries({ queryKey: ['vehicles'] });
     },
     onError: (err: any) => {
       addToast('error', err.message || 'Failed to update vehicle.');
@@ -104,7 +103,7 @@ export const AppContent: React.FC = () => {
     mutationFn: (id: string) => vehicleApi.deleteVehicle(id),
     onSuccess: () => {
       addToast('info', 'Vehicle record deleted from inventory.');
-      queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+      queryClientInstance.invalidateQueries({ queryKey: ['vehicles'] });
     },
     onError: (err: any) => {
       addToast('error', err.message || 'Failed to delete vehicle.');
@@ -114,9 +113,9 @@ export const AppContent: React.FC = () => {
   const restockMutation = useMutation({
     mutationFn: ({ id, quantity }: { id: string; quantity: number }) =>
       vehicleApi.restockVehicle(id, quantity),
-    onSuccess: (updated) => {
-      addToast('success', `Restocked +${restockingVehicle ? updated.quantity - restockingVehicle.quantity : ''} units for ${updated.make} ${updated.model}!`);
-      queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+    onSuccess: (updated, variables) => {
+      addToast('success', `Restocked +${variables.quantity} units for ${updated.make} ${updated.model}!`);
+      queryClientInstance.invalidateQueries({ queryKey: ['vehicles'] });
     },
     onError: (err: any) => {
       addToast('error', err.message || 'Failed to restock vehicle.');
@@ -161,13 +160,13 @@ export const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#13151A] text-[#F3F0E9] flex flex-col font-sans">
+    <div className="min-h-screen bg-white text-[#18181B] flex flex-col font-sans">
       <Navbar
         onOpenAuth={() => setIsAuthModalOpen(true)}
         onOpenAddVehicle={handleOpenAddVehicle}
       />
 
-      <main className="max-w-[1240px] mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-10">
+      <main className="max-w-[1280px] mx-auto px-4 sm:px-8 pt-6 pb-12 flex-1 w-full space-y-12">
         {/* Luxury Landing Hero Banner & Floating Search */}
         <HeroBanner
           onSearch={(newFilters) => setFilters((prev) => ({ ...prev, ...newFilters }))}
@@ -176,15 +175,15 @@ export const AppContent: React.FC = () => {
         />
 
         {/* Showroom Inventory Headline & Filters */}
-        <div id="showroom-inventory">
-          <div className="flex items-center gap-2 text-[#454C5C] font-signage text-xs uppercase tracking-widest mb-1 font-semibold">
-            <Layers className="w-4 h-4 text-[#E3A143]" />
+        <div id="showroom-inventory" className="space-y-1">
+          <div className="flex items-center gap-2 text-[#6B7280] text-xs uppercase tracking-widest font-semibold">
+            <Layers className="w-4 h-4 text-[#111111]" />
             <span>Showroom Inventory Management</span>
           </div>
-          <h2 className="font-signage text-3xl sm:text-4xl font-bold tracking-tight text-[#F3F0E9] uppercase">
+          <h2 className="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-[#18181B] uppercase">
             EXPLORE SHOWROOM INVENTORY
           </h2>
-          <p className="text-xs sm:text-sm text-[#F3F0E9]/70 mt-1 max-w-2xl font-sans">
+          <p className="text-xs sm:text-sm text-[#6B7280] max-w-2xl font-sans">
             Real-time dealership vehicle stock, price specifications in INR (₹), and instant purchasing.
           </p>
         </div>
@@ -198,33 +197,39 @@ export const AppContent: React.FC = () => {
 
         {/* Vehicle Grid Content State */}
         {isLoading ? (
-          <div className="py-16 text-center text-[#454C5C] font-signage tracking-wider uppercase text-sm flex flex-col items-center gap-3">
-            <RefreshCw className="w-6 h-6 animate-spin text-[#E3A143]" />
-            <span>Loading Showroom Vehicles...</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-white border border-[#E5E7EB] rounded-3xl p-5 space-y-4 animate-shimmer shadow-sm">
+                <div className="w-full aspect-[16/10] rounded-2xl bg-[#FAFAFA]" />
+                <div className="h-6 w-3/4 bg-[#FAFAFA] rounded-md" />
+                <div className="h-8 w-1/2 bg-[#FAFAFA] rounded-md" />
+                <div className="h-12 w-full bg-[#FAFAFA] rounded-full mt-4" />
+              </div>
+            ))}
           </div>
         ) : isError ? (
-          <div className="bg-[#2C1E1C] border border-[#C4574A]/40 rounded-md p-6 text-center text-xs text-[#C4574A] my-8">
+          <div className="bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-6 text-center text-xs text-[#EF4444] my-8">
             <p className="font-semibold text-sm mb-1">Failed to load vehicle inventory</p>
             <p>{(error as any)?.message || 'Please check backend server connection.'}</p>
             <button
               onClick={() => refetch()}
-              className="btn-ghost mt-4 px-4 py-1.5 rounded-sm text-xs font-signage uppercase tracking-wider text-[#F3F0E9]"
+              className="btn-ghost mt-4 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider text-[#18181B]"
             >
               Retry Connection
             </button>
           </div>
         ) : vehicles.length === 0 ? (
-          <div className="bg-[#1B1E24] border border-[#333846] rounded-md p-12 text-center my-8">
-            <Car className="w-12 h-12 text-[#454C5C] mx-auto mb-3" />
-            <h3 className="font-signage text-xl font-semibold uppercase text-[#F3F0E9] mb-1">
+          <div className="bg-[#FAFAFA] border border-[#E5E7EB] rounded-3xl p-12 text-center my-8 shadow-sm">
+            <Car className="w-12 h-12 text-[#9CA3AF] mx-auto mb-3" />
+            <h3 className="font-heading text-xl font-bold uppercase text-[#18181B] mb-1">
               No Vehicles Found
             </h3>
-            <p className="text-xs text-[#F3F0E9]/60 font-sans mb-4">
+            <p className="text-xs text-[#6B7280] font-sans mb-4">
               No vehicle matches your active filter criteria. Try adjusting or clearing search parameters.
             </p>
             <button
               onClick={() => setFilters({})}
-              className="btn-ghost px-4 py-2 rounded-sm text-xs font-signage uppercase tracking-wider text-[#E3A143] border-[#E3A143]/40"
+              className="btn-ghost px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#111111] border-[#111111]"
             >
               Clear All Filters
             </button>
@@ -239,10 +244,7 @@ export const AppContent: React.FC = () => {
                 onEdit={handleOpenEditVehicle}
                 onDelete={(id) => deleteMutation.mutate(id)}
                 onRestock={handleOpenRestock}
-                isPurchasing={
-                  purchaseMutation.isPending &&
-                  purchaseMutation.variables === vehicle.id
-                }
+                isPurchasing={purchaseMutation.isPending}
               />
             ))}
           </div>
