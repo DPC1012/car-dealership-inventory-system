@@ -13,7 +13,7 @@ import { RestockModal } from './components/RestockModal';
 import { HeroBanner } from './components/HeroBanner';
 import { ShowcaseSections } from './components/ShowcaseSections';
 import { ToastContainer, type ToastMessage } from './components/Toast';
-import { Car, RefreshCw, Layers } from 'lucide-react';
+import { Car, Layers } from 'lucide-react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
