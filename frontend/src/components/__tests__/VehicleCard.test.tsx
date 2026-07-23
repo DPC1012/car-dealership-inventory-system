@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { VehicleCard } from '../VehicleCard';
 import { AuthProvider } from '../../context/AuthContext';
+import { ThemeProvider } from '../../context/ThemeContext';
 import type { Vehicle } from '../../types';
 
 const mockVehicle: Vehicle = {
@@ -18,15 +19,17 @@ const mockVehicle: Vehicle = {
 describe('VehicleCard Component', () => {
   it('renders vehicle specs, category badge, and formatted INR price', () => {
     render(
-      <AuthProvider>
-        <VehicleCard
-          vehicle={mockVehicle}
-          onPurchase={vi.fn()}
-          onEdit={vi.fn()}
-          onDelete={vi.fn()}
-          onRestock={vi.fn()}
-        />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <VehicleCard
+            vehicle={mockVehicle}
+            onPurchase={vi.fn()}
+            onEdit={vi.fn()}
+            onDelete={vi.fn()}
+            onRestock={vi.fn()}
+          />
+        </AuthProvider>
+      </ThemeProvider>
     );
 
     expect(screen.getByText('Porsche 911 GT3')).toBeInTheDocument();
@@ -45,15 +48,17 @@ describe('VehicleCard Component', () => {
     localStorage.setItem('user', JSON.stringify({ id: 'u1', name: 'Test User', email: 'test@example.com', role: 'USER' }));
 
     render(
-      <AuthProvider>
-        <VehicleCard
-          vehicle={zeroStockVehicle}
-          onPurchase={vi.fn()}
-          onEdit={vi.fn()}
-          onDelete={vi.fn()}
-          onRestock={vi.fn()}
-        />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <VehicleCard
+            vehicle={zeroStockVehicle}
+            onPurchase={vi.fn()}
+            onEdit={vi.fn()}
+            onDelete={vi.fn()}
+            onRestock={vi.fn()}
+          />
+        </AuthProvider>
+      </ThemeProvider>
     );
 
     const purchaseBtn = screen.getByRole('button', { name: /SOLD OUT/i });

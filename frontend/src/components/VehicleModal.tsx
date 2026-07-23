@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Vehicle, VehicleCategory, VehicleFormData } from '../types';
 import { vehicleApi } from '../services/api';
 import { X, AlertCircle, Upload } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 interface VehicleModalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
   initialData,
   isLoading,
 }) => {
+  const { theme } = useTheme();
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
   const [category, setCategory] = useState<VehicleCategory>('SEDAN');
@@ -120,31 +122,38 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
     }
   };
 
+  const inputClasses = "w-full rounded-2xl px-4 py-2.5 text-xs outline-none font-sans focus:bg-white";
+
   return (
     <div
       onClick={isLoading ? undefined : onClose}
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4"
+      style={{ backgroundColor: 'var(--color-overlay)' }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative text-[#18181B] animate-in"
+        className="rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative animate-in theme-transition"
+        style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)' }}
       >
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-[#9CA3AF] hover:text-[#18181B] transition-colors p-1"
+          className="absolute top-5 right-5 transition-colors p-1"
+          style={{ color: 'var(--color-muted-text)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary-text)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted-text)')}
         >
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="font-heading text-2xl font-bold tracking-tight text-[#18181B] mb-1">
+        <h2 className="font-heading text-2xl font-bold tracking-tight mb-1" style={{ color: 'var(--color-primary-text)' }}>
           {initialData ? 'Update Vehicle Record' : 'Add New Vehicle to Inventory'}
         </h2>
-        <p className="text-xs text-[#6B7280] mb-6 font-sans">
+        <p className="text-xs mb-6 font-sans" style={{ color: 'var(--color-secondary-text)' }}>
           Manage show-floor inventory attributes, pricing specifications, and photography CDN.
         </p>
 
         {error && (
-          <div className="mb-5 bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-[#EF4444]">
+          <div className="mb-5 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs" style={{ backgroundColor: 'var(--color-error-bg)', borderColor: 'var(--color-error-border)', color: 'var(--color-error)', borderWidth: '1px', borderStyle: 'solid' }}>
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -153,7 +162,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Make (Manufacturer)
               </label>
               <input
@@ -162,12 +171,13 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={make}
                 onChange={(e) => setMake(e.target.value)}
                 placeholder="e.g. Porsche"
-                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
+                className={inputClasses}
+                style={{ backgroundColor: 'var(--color-input-bg)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', borderWidth: '1px', borderStyle: 'solid' }}
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Model Name
               </label>
               <input
@@ -176,19 +186,21 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
                 placeholder="e.g. 911 GT3 RS"
-                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
+                className={inputClasses}
+                style={{ backgroundColor: 'var(--color-input-bg)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', borderWidth: '1px', borderStyle: 'solid' }}
               />
             </div>
           </div>
 
           <div>
-            <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+            <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
               Vehicle Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as VehicleCategory)}
-              className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] focus:border-[#111111] focus:bg-white outline-none font-sans"
+              className={inputClasses}
+              style={{ backgroundColor: 'var(--color-input-bg)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', borderWidth: '1px', borderStyle: 'solid' }}
             >
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -200,7 +212,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Price (INR ₹)
               </label>
               <input
@@ -210,12 +222,13 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={price}
                 onChange={(e) => setPrice(e.target.value ? Number(e.target.value) : '')}
                 placeholder="e.g. 15000000"
-                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
+                className={inputClasses}
+                style={{ backgroundColor: 'var(--color-input-bg)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', borderWidth: '1px', borderStyle: 'solid' }}
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+              <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
                 Initial Stock Quantity
               </label>
               <input
@@ -225,14 +238,15 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value ? Number(e.target.value) : '')}
                 placeholder="e.g. 5"
-                className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
+                className={inputClasses}
+                style={{ backgroundColor: 'var(--color-input-bg)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', borderWidth: '1px', borderStyle: 'solid' }}
               />
             </div>
           </div>
 
           {/* Vehicle Image Upload / URL Field */}
           <div>
-            <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+            <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
               Vehicle Image (File Upload or Image URL)
             </label>
 
@@ -242,10 +256,11 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://ik.imagekit.io/... or upload file below"
-                className="flex-1 bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans"
+                className="flex-1 rounded-2xl px-4 py-2.5 text-xs outline-none font-sans focus:bg-white"
+                style={{ backgroundColor: 'var(--color-input-bg)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', borderWidth: '1px', borderStyle: 'solid' }}
               />
 
-              <label className="px-4 py-2.5 rounded-full text-xs font-semibold text-[#18181B] border border-[#E5E7EB] hover:bg-[#FAFAFA] cursor-pointer flex items-center gap-1.5 transition-colors">
+              <label className="px-4 py-2.5 rounded-full text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-colors" style={{ color: 'var(--color-primary-text)', borderColor: 'var(--color-border)', borderWidth: '1px', borderStyle: 'solid' }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-input-bg)')} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}>
                 <Upload className="w-3.5 h-3.5" />
                 {uploading ? 'Uploading...' : 'Browse'}
                 <input
@@ -259,12 +274,15 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
             </div>
 
             {imageUrl && (
-              <div className="w-full h-36 rounded-2xl bg-[#FAFAFA] border border-[#E5E7EB] overflow-hidden relative mt-2">
+              <div className="w-full h-36 rounded-2xl overflow-hidden relative mt-2" style={{ backgroundColor: 'var(--color-input-bg)', borderColor: 'var(--color-border)', borderWidth: '1px', borderStyle: 'solid' }}>
                 <img src={imageUrl} alt="Vehicle Preview" className="w-full h-full object-cover" />
                 <button
                   type="button"
                   onClick={() => setImageUrl('')}
-                  className="absolute top-2 right-2 bg-black/70 text-white rounded-full p-1.5 hover:bg-[#EF4444]"
+                  className="absolute top-2 right-2 rounded-full p-1.5"
+                  style={{ backgroundColor: 'rgba(0,0,0,0.7)', color: 'white' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-error)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.7)')}
                   title="Remove Image"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -273,22 +291,22 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
             )}
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#F3F4F6]">
+          <div className="flex items-center justify-end gap-3 pt-4" style={{ borderTop: '1px solid var(--color-divider)' }}>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-full text-xs font-semibold text-[#6B7280] border border-[#E5E7EB] hover:bg-[#FAFAFA]"
+              className="px-5 py-2.5 rounded-full text-xs font-semibold transition-colors"
+              style={{ color: 'var(--color-secondary-text)', borderColor: 'var(--color-border)', borderWidth: '1px', borderStyle: 'solid' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-input-bg)')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md ${
-                isLoading
-                  ? 'bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed'
-                  : 'bg-[#111111] text-white hover:bg-[#27272A]'
-              }`}
+              className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md"
+              style={isLoading ? { backgroundColor: 'var(--color-border)', color: 'var(--color-muted-text)', cursor: 'not-allowed' } : { backgroundColor: 'var(--color-primary-dark)', color: 'var(--color-button-text)' }}
             >
               {isLoading ? 'Saving...' : initialData ? 'Update Vehicle' : 'Add Vehicle'}
             </button>

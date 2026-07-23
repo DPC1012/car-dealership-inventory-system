@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -16,7 +17,7 @@ interface ToastProps {
 
 export const ToastContainer: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none theme-transition">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
       ))}
@@ -28,6 +29,8 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
   toast,
   onDismiss,
 }) => {
+  const { theme } = useTheme();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       onDismiss(toast.id);
@@ -37,20 +40,20 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
 
   const styleConfig = {
     success: {
-      bg: 'bg-[#1E2A24]',
-      border: 'border-[#6FA787]/40',
+      bg: 'var(--color-card)',
+      border: 'var(--color-success)',
       text: 'text-[#6FA787]',
       icon: CheckCircle2,
     },
     error: {
-      bg: 'bg-[#2C1E1C]',
-      border: 'border-[#C4574A]/40',
+      bg: 'var(--color-card)',
+      border: 'var(--color-error)',
       text: 'text-[#C4574A]',
       icon: AlertCircle,
     },
     info: {
-      bg: 'bg-[#1E262F]',
-      border: 'border-[#5B7A99]/40',
+      bg: 'var(--color-card)',
+      border: 'var(--color-info)',
       text: 'text-[#5B7A99]',
       icon: Info,
     },
@@ -60,15 +63,22 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
 
   return (
     <div
-      className={`pointer-events-auto ${styleConfig.bg} border ${styleConfig.border} rounded-md p-3.5 flex items-start gap-3 shadow-xl transition-all duration-300 animate-slide-up`}
+      className={`pointer-events-auto border rounded-md p-3.5 flex items-start gap-3 shadow-xl transition-all duration-300 animate-slide-up`}
+      style={{
+        backgroundColor: styleConfig.bg,
+        borderColor: `${styleConfig.border}66`,
+      }}
     >
       <IconComponent className={`w-5 h-5 shrink-0 ${styleConfig.text} mt-0.5`} />
-      <div className="flex-1 text-xs font-sans text-[#F3F0E9] leading-relaxed">
+      <div className="flex-1 text-xs font-sans leading-relaxed" style={{ color: 'var(--color-primary-text)' }}>
         {toast.message}
       </div>
       <button
         onClick={() => onDismiss(toast.id)}
-        className="text-[#8A909C] hover:text-[#F3F0E9] transition-colors shrink-0"
+        className="shrink-0 transition-colors"
+        style={{ color: 'var(--color-muted-text)' }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary-text)')}
+        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted-text)')}
       >
         <X className="w-4 h-4" />
       </button>

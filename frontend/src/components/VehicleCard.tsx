@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Vehicle } from '../types';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { ShoppingBag, Edit, Trash2, PlusCircle } from 'lucide-react';
 
 interface VehicleCardProps {
@@ -10,6 +11,7 @@ interface VehicleCardProps {
   onDelete: (id: string) => void;
   onRestock: (vehicle: Vehicle) => void;
   isPurchasing?: boolean;
+  index?: number;
 }
 
 export const VehicleCard: React.FC<VehicleCardProps> = ({
@@ -19,10 +21,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   onDelete,
   onRestock,
   isPurchasing,
+  index = 0,
 }) => {
   const { isAuthenticated, isAdmin } = useAuth();
+  const { theme } = useTheme();
 
-  // Price formatter in INR currency (DESIGN_SYSTEM.md)
   const formatPrice = (amount: string | number) => {
     const num = typeof amount === 'string' ? parseFloat(amount) : amount;
     return new Intl.NumberFormat('en-IN', {
@@ -36,10 +39,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const isLowStock = vehicle.quantity > 0 && vehicle.quantity <= 2;
 
   return (
-    <div className="card-vehicle flex flex-col justify-between h-full group">
+    <div
+      className="card-vehicle animate-card flex flex-col justify-between h-full group theme-transition"
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
       <div>
-        {/* 16:10 Aspect Ratio Image Container */}
-        <div className="w-full aspect-[16/10] rounded-2xl bg-[#FAFAFA] border border-[#E5E7EB] overflow-hidden mb-4 relative flex items-center justify-center">
+        <div
+          className="w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4 relative flex items-center justify-center theme-transition"
+          style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+        >
           {vehicle.imageUrl ? (
             <img
               src={vehicle.imageUrl}
@@ -47,33 +55,47 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex flex-col items-center justify-center text-[#9CA3AF]">
+            <div className="flex flex-col items-center justify-center" style={{ color: 'var(--color-muted-text)' }}>
               <span className="font-heading text-xl font-bold tracking-widest uppercase">
                 {vehicle.make}
               </span>
-              <span className="text-[10px] font-sans uppercase tracking-wider text-[#9CA3AF] mt-1">
+              <span
+                className="text-[10px] font-sans uppercase tracking-wider mt-1"
+                style={{ color: 'var(--color-muted-text)' }}
+              >
                 Showroom Vehicle
               </span>
             </div>
           )}
 
-          {/* Category Badge Top Left */}
-          <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-[#E5E7EB] shadow-sm">
-            <span className="text-[10px] font-semibold tracking-wider text-[#18181B] uppercase">
+          <div
+            className="absolute top-3 left-3 backdrop-blur-md px-3 py-1 rounded-full shadow-sm theme-transition"
+            style={{ backgroundColor: 'color-mix(in srgb, var(--color-card) 90%, transparent)', border: '1px solid var(--color-border)' }}
+          >
+            <span
+              className="text-[10px] font-semibold tracking-wider uppercase"
+              style={{ color: 'var(--color-primary-text)' }}
+            >
               {vehicle.category}
             </span>
           </div>
 
-          {/* Stock Status Badge Top Right */}
           <div className="absolute top-3 right-3">
             <span
               className={`text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md ${
                 isOutOfStock
-                  ? 'bg-[#FEF2F2] text-[#EF4444] border border-[#FCA5A5]'
+                  ? ''
                   : isLowStock
-                  ? 'bg-[#FFFBEB] text-[#F59E0B] border border-[#FCD34D]'
-                  : 'bg-[#F0FDF4] text-[#22C55E] border border-[#86EFAC]'
+                  ? ''
+                  : ''
               }`}
+              style={
+                isOutOfStock
+                  ? { backgroundColor: 'color-mix(in srgb, var(--color-error) 12%, transparent)', color: 'var(--color-error)', border: '1px solid color-mix(in srgb, var(--color-error) 30%, transparent)' }
+                  : isLowStock
+                  ? { backgroundColor: 'color-mix(in srgb, var(--color-warning) 12%, transparent)', color: 'var(--color-warning)', border: '1px solid color-mix(in srgb, var(--color-warning) 30%, transparent)' }
+                  : { backgroundColor: 'color-mix(in srgb, var(--color-success) 12%, transparent)', color: 'var(--color-success)', border: '1px solid color-mix(in srgb, var(--color-success) 30%, transparent)' }
+              }
             >
               {isOutOfStock
                 ? 'SOLD OUT'
@@ -84,26 +106,29 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           </div>
         </div>
 
-        {/* Vehicle Title */}
-        <h3 className="font-heading text-xl font-bold text-[#18181B] tracking-tight group-hover:text-[#111111] transition-colors">
+        <h3
+          className="font-heading text-xl font-bold tracking-tight group-hover:opacity-80 transition-colors theme-transition"
+          style={{ color: 'var(--color-primary-text)' }}
+        >
           {vehicle.make} {vehicle.model}
         </h3>
 
-        <div className="flex items-center gap-2 text-xs text-[#6B7280] font-sans mt-1 mb-3">
+        <div className="flex items-center gap-2 text-xs font-sans mt-1 mb-3" style={{ color: 'var(--color-secondary-text)' }}>
           <span>{vehicle.category}</span>
           <span>•</span>
           <span>Certified Showroom</span>
         </div>
 
-        {/* Price Display */}
         <div className="my-3">
-          <span className="font-heading text-2xl font-extrabold text-[#111111] tracking-tight">
+          <span
+            className="font-heading text-2xl font-extrabold tracking-tight"
+            style={{ color: 'var(--color-primary-text)' }}
+          >
             {formatPrice(vehicle.price)}
           </span>
         </div>
       </div>
 
-      {/* Action Buttons (Primary 48px Pill Button per Section 7) */}
       <div className="mt-4 space-y-2">
         {!isAdmin && (
           <>
@@ -111,6 +136,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               <button
                 onClick={() => onPurchase(vehicle)}
                 className="btn-primary w-full flex items-center justify-center gap-2 shadow-sm"
+                style={{ backgroundColor: 'var(--color-primary-dark)', color: 'var(--color-card)' }}
               >
                 <ShoppingBag className="w-4 h-4" />
                 Sign In to Purchase
@@ -120,6 +146,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                 onClick={() => onPurchase(vehicle)}
                 disabled={isOutOfStock || isPurchasing}
                 className="btn-primary w-full flex items-center justify-center gap-2 shadow-sm"
+                style={{ backgroundColor: 'var(--color-primary-dark)', color: 'var(--color-card)' }}
               >
                 <ShoppingBag className="w-4 h-4" />
                 {isPurchasing
@@ -132,24 +159,28 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           </>
         )}
 
-        {/* Admin Controls */}
         {isAdmin && (
-          <div className="grid grid-cols-3 gap-2 pt-3 border-t border-[#F3F4F6] mt-2">
+          <div
+            className="grid grid-cols-3 gap-2 pt-3 mt-2"
+            style={{ borderTop: '1px solid var(--color-border)' }}
+          >
             <button
               onClick={() => onEdit(vehicle)}
-              className="py-2 px-2 text-xs font-semibold uppercase tracking-wider rounded-xl border border-[#E5E7EB] text-[#18181B] hover:bg-[#F5F5F5] flex items-center justify-center gap-1 transition-colors"
+              className="py-2 px-2 text-xs font-semibold uppercase tracking-wider rounded-xl flex items-center justify-center gap-1 transition-colors theme-transition"
+              style={{ border: '1px solid var(--color-border)', color: 'var(--color-primary-text)' }}
               title="Edit Vehicle"
             >
-              <Edit className="w-3.5 h-3.5 text-[#3B82F6]" />
+              <Edit className="w-3.5 h-3.5" style={{ color: 'var(--color-primary-dark)' }} />
               Edit
             </button>
 
             <button
               onClick={() => onRestock(vehicle)}
-              className="py-2 px-2 text-xs font-semibold uppercase tracking-wider rounded-xl border border-[#E5E7EB] text-[#18181B] hover:bg-[#F5F5F5] flex items-center justify-center gap-1 transition-colors"
+              className="py-2 px-2 text-xs font-semibold uppercase tracking-wider rounded-xl flex items-center justify-center gap-1 transition-colors theme-transition"
+              style={{ border: '1px solid var(--color-border)', color: 'var(--color-primary-text)' }}
               title="Add Stock"
             >
-              <PlusCircle className="w-3.5 h-3.5 text-[#22C55E]" />
+              <PlusCircle className="w-3.5 h-3.5" style={{ color: 'var(--color-success)' }} />
               Restock
             </button>
 
@@ -159,7 +190,12 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
                   onDelete(vehicle.id);
                 }
               }}
-              className="py-2 px-2 text-xs font-semibold uppercase tracking-wider rounded-xl border border-[#FCA5A5] text-[#EF4444] bg-[#FEF2F2] hover:bg-[#FEE2E2] flex items-center justify-center gap-1 transition-colors"
+              className="py-2 px-2 text-xs font-semibold uppercase tracking-wider rounded-xl flex items-center justify-center gap-1 transition-colors theme-transition"
+              style={{
+                border: '1px solid color-mix(in srgb, var(--color-error) 30%, transparent)',
+                color: 'var(--color-error)',
+                backgroundColor: 'color-mix(in srgb, var(--color-error) 8%, transparent)',
+              }}
               title="Delete Vehicle"
             >
               <Trash2 className="w-3.5 h-3.5" />

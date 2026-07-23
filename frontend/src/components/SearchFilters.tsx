@@ -1,6 +1,7 @@
 import React from 'react';
 import type { SearchFilters as SearchFiltersType, VehicleCategory } from '../types';
 import { Search, RotateCcw, Filter } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 interface SearchFiltersProps {
   filters: SearchFiltersType;
@@ -19,6 +20,8 @@ const CATEGORIES: VehicleCategory[] = [
 ];
 
 export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange, onClear }) => {
+  const { theme } = useTheme();
+
   const handleMakeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({ ...filters, make: e.target.value });
   };
@@ -40,11 +43,14 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
     !!filters.make || !!filters.category || filters.minPrice !== undefined || filters.maxPrice !== undefined;
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-3xl p-6 shadow-sm mb-8 space-y-5">
-      <div className="flex items-center justify-between border-b border-[#F3F4F6] pb-3">
+    <div
+      className="animate-panel rounded-3xl p-6 shadow-sm mb-8 space-y-5"
+      style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}
+    >
+      <div className="flex items-center justify-between pb-3 theme-transition" style={{ borderBottom: '1px solid var(--color-divider)' }}>
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-[#111111]" />
-          <h3 className="font-heading text-sm font-bold tracking-wider text-[#18181B] uppercase">
+          <Filter className="w-4 h-4 theme-transition" style={{ color: 'var(--color-primary-text)' }} />
+          <h3 className="font-heading text-sm font-bold tracking-wider uppercase theme-transition" style={{ color: 'var(--color-primary-text)' }}>
             Filter Showroom Inventory
           </h3>
         </div>
@@ -52,7 +58,8 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
         {hasActiveFilters && (
           <button
             onClick={onClear}
-            className="px-3 py-1 text-xs font-medium text-[#6B7280] hover:text-[#111111] border border-[#E5E7EB] hover:border-[#111111] rounded-full flex items-center gap-1.5 transition-colors"
+            className="px-3 py-1 text-xs font-medium rounded-full flex items-center gap-1.5 transition-colors"
+            style={{ color: 'var(--color-secondary-text)', border: '1px solid var(--color-border)' }}
           >
             <RotateCcw className="w-3 h-3" />
             Reset Filters
@@ -64,24 +71,31 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Make Search */}
         <div>
-          <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+          <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5 theme-transition" style={{ color: 'var(--color-secondary-text)' }}>
             Search Make
           </label>
           <div className="relative">
-            <Search className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-3" />
+            <Search className="w-4 h-4 absolute left-3.5 top-3 theme-transition" style={{ color: 'var(--color-muted-text)' }} />
             <input
               type="text"
               value={filters.make || ''}
               onChange={handleMakeChange}
               placeholder="e.g. Porsche, BMW, Audi..."
-              className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl pl-10 pr-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans transition-colors"
+              className="w-full rounded-2xl pl-10 pr-4 py-2.5 text-xs outline-none font-sans transition-colors theme-transition"
+              style={{
+                backgroundColor: 'var(--color-input-bg)',
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-primary-text)',
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary-dark)'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
             />
           </div>
         </div>
 
         {/* Min Price */}
         <div>
-          <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+          <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5 theme-transition" style={{ color: 'var(--color-secondary-text)' }}>
             Min Price (₹)
           </label>
           <input
@@ -89,13 +103,20 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
             value={filters.minPrice !== undefined ? filters.minPrice : ''}
             onChange={handleMinPriceChange}
             placeholder="e.g. 1000000"
-            className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans transition-colors"
+            className="w-full rounded-2xl px-4 py-2.5 text-xs outline-none font-sans transition-colors theme-transition"
+            style={{
+              backgroundColor: 'var(--color-input-bg)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-primary-text)',
+            }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary-dark)'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
           />
         </div>
 
         {/* Max Price */}
         <div>
-          <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+          <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5 theme-transition" style={{ color: 'var(--color-secondary-text)' }}>
             Max Price (₹)
           </label>
           <input
@@ -103,14 +124,21 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
             value={filters.maxPrice !== undefined ? filters.maxPrice : ''}
             onChange={handleMaxPriceChange}
             placeholder="e.g. 5000000"
-            className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] placeholder-[#9CA3AF] focus:border-[#111111] focus:bg-white outline-none font-sans transition-colors"
+            className="w-full rounded-2xl px-4 py-2.5 text-xs outline-none font-sans transition-colors theme-transition"
+            style={{
+              backgroundColor: 'var(--color-input-bg)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-primary-text)',
+            }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary-dark)'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
           />
         </div>
       </div>
 
       {/* Category Filter Badges */}
       <div>
-        <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-2">
+        <label className="text-xs font-semibold tracking-wider uppercase block mb-2 theme-transition" style={{ color: 'var(--color-secondary-text)' }}>
           Category
         </label>
         <div className="flex flex-wrap gap-2">
@@ -121,11 +149,14 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange,
                 key={cat}
                 type="button"
                 onClick={() => handleCategorySelect(cat)}
-                className={`text-xs font-semibold tracking-wider uppercase px-3.5 py-1.5 rounded-full border transition-all ${
-                  isSelected
-                    ? 'bg-[#111111] text-white border-[#111111] shadow-sm'
-                    : 'bg-[#FAFAFA] text-[#6B7280] border-[#E5E7EB] hover:border-[#111111] hover:text-[#18181B]'
+                className={`text-xs font-semibold tracking-wider uppercase px-3.5 py-1.5 rounded-full border transition-all theme-transition ${
+                  isSelected ? 'shadow-sm' : ''
                 }`}
+                style={
+                  isSelected
+                    ? { backgroundColor: 'var(--color-primary-dark)', color: 'var(--color-bg)', borderColor: 'var(--color-primary-dark)' }
+                    : { backgroundColor: 'var(--color-surface)', color: 'var(--color-secondary-text)', borderColor: 'var(--color-border)' }
+                }
               >
                 {cat}
               </button>

@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 @layer base {
-  :root {
+  :root,
+  [data-theme="light"] {
     --color-bg: #FFFFFF;
     --color-surface: #FAFAFA;
     --color-surface-hover: #F5F5F5;
@@ -13,11 +14,38 @@
     --color-border: #E5E7EB;
     --color-divider: #F3F4F6;
 
-    /* Semantic */
     --color-success: #22C55E;
     --color-warning: #F59E0B;
     --color-error: #EF4444;
     --color-info: #3B82F6;
+
+    --color-card-shadow: rgba(0, 0, 0, 0.04);
+    --color-card-shadow-hover: rgba(0, 0, 0, 0.08);
+    --color-overlay: rgba(0, 0, 0, 0.60);
+    --color-input-bg: #FAFAFA;
+  }
+
+  [data-theme="dark"] {
+    --color-bg: #0A0A0B;
+    --color-surface: #141416;
+    --color-surface-hover: #1C1C1F;
+    --color-card: #141416;
+    --color-primary-dark: #FAFAFA;
+    --color-primary-text: #F3F4F6;
+    --color-secondary-text: #9CA3AF;
+    --color-muted-text: #6B7280;
+    --color-border: #27272A;
+    --color-divider: #1E1E22;
+
+    --color-success: #34D399;
+    --color-warning: #FBBF24;
+    --color-error: #F87171;
+    --color-info: #60A5FA;
+
+    --color-card-shadow: rgba(0, 0, 0, 0.30);
+    --color-card-shadow-hover: rgba(0, 0, 0, 0.50);
+    --color-overlay: rgba(0, 0, 0, 0.75);
+    --color-input-bg: #1C1C1F;
   }
 
   body {
@@ -27,6 +55,7 @@
     min-height: 100vh;
     margin: 0;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, h4, .font-heading, .font-signage {
@@ -34,105 +63,180 @@
   }
 }
 
-/* Custom Design System Utility Classes */
+/* ─── Design System Utility Classes ─── */
 .btn-primary {
-  background-color: #111111;
-  color: #FFFFFF;
+  background-color: var(--color-primary-dark);
+  color: var(--color-bg);
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   border-radius: 9999px;
   height: 48px;
   padding-left: 24px;
   padding-right: 24px;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(255,255,255,0.25) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-primary:active::after {
+  opacity: 1;
+  transition: opacity 0s;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #27272A;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--color-card-shadow-hover);
 }
 
 .btn-primary:disabled {
-  background-color: #E5E7EB;
-  color: #9CA3AF;
+  background-color: var(--color-border);
+  color: var(--color-muted-text);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-secondary {
-  background-color: #FFFFFF;
-  color: #18181B;
-  border: 1px solid #E5E7EB;
+  background-color: var(--color-card);
+  color: var(--color-primary-text);
+  border: 1px solid var(--color-border);
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   border-radius: 9999px;
   height: 48px;
   padding-left: 20px;
   padding-right: 20px;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #F5F5F5;
-  border-color: #D1D5DB;
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-muted-text);
+  transform: translateY(-1px);
 }
 
 .btn-ghost {
   background-color: transparent;
-  color: #18181B;
-  border: 1px solid #E5E7EB;
+  color: var(--color-primary-text);
+  border: 1px solid var(--color-border);
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   border-radius: 12px;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-ghost:hover:not(:disabled) {
-  background-color: #F5F5F5;
-  border-color: #111111;
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-primary-dark);
 }
 
-/* 20px Rounded Vehicle Card (DESIGN_SYSTEM.md Section 11) */
+/* ─── Vehicle Card ─── */
 .card-vehicle {
-  background-color: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
   border-radius: 20px;
   padding: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px var(--color-card-shadow);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease;
 }
 
 .card-vehicle:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
-  border-color: #D1D5DB;
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px var(--color-card-shadow-hover);
+  border-color: var(--color-muted-text);
 }
 
-/* Shimmer Skeleton Animation */
+/* ─── Animations ─── */
+
+/* Shimmer skeleton */
 @keyframes shimmer {
   0% { opacity: 0.5; }
   50% { opacity: 1; }
   100% { opacity: 0.5; }
 }
-
 .animate-shimmer {
   animation: shimmer 1.5s infinite ease-in-out;
 }
 
-/* Modal entrance animation — single class, use this on modal content */
+/* Modal entrance — single class with forwards */
 @keyframes modal-in {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
-
 .animate-in {
-  animation: modal-in 0.2s ease-out forwards;
+  animation: modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Toast slide-up animation */
+/* Toast slide-up */
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-slide-up {
+  animation: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hero text entrance */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.animate-hero {
+  animation: hero-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+.animate-hero-delay-1 { animation-delay: 0.1s; }
+.animate-hero-delay-2 { animation-delay: 0.2s; }
+.animate-hero-delay-3 { animation-delay: 0.35s; }
 
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out;
+/* Card stagger entrance */
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-card {
+  animation: card-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* Search panel entrance */
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-panel {
+  animation: panel-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* Badge pop */
+@keyframes badge-pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-badge {
+  animation: badge-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Navbar blur backdrop */
+.nav-blur {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* Smooth theme transition on themed elements */
+.theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }

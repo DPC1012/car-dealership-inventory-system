@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowUpRight, Car, Shield, Wrench, DollarSign, Star, Clock, Phone, MapPin } from 'lucide-react';
+import { ArrowUpRight, Car, Shield, Wrench, DollarSign, Star, Clock, Phone, MapPin, ChevronRight } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import type { VehicleCategory, SearchFilters } from '../types';
 
 interface ShowcaseSectionsProps {
@@ -11,13 +12,13 @@ interface ShowcaseSectionsProps {
 const CATEGORY_CARDS: { category: VehicleCategory; label: string; count: string; image: string }[] = [
   {
     category: 'SEDAN',
-    label: 'Luxury Sedan',
+    label: 'Executive Sedan',
     count: '18 Available',
     image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=600&q=80',
   },
   {
     category: 'SUV',
-    label: 'Premium SUV',
+    label: 'Luxury SUV',
     count: '24 Available',
     image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80',
   },
@@ -76,56 +77,64 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
   onSearch,
   onOpenAuth,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <div className="space-y-16 py-4">
-      {/* 1. Browse by Type Section */}
-      <section className="space-y-6">
-        <div className="flex items-end justify-between border-b border-[#333846] pb-4">
+      {/* 1. Browse by Category Section (DESIGN_SYSTEM.md Section 12) */}
+      <section id="categories" className="space-y-6 theme-transition">
+        <div className="flex items-end justify-between border-b pb-4" style={{ borderColor: 'var(--color-divider)' }}>
           <div>
-            <h2 className="font-signage text-2xl sm:text-3xl font-bold tracking-wide text-[#F3F0E9] uppercase">
+            <h2 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight" style={{ color: 'var(--color-primary-text)' }}>
               Browse by Category
             </h2>
-            <p className="text-xs text-[#F3F0E9]/60 font-sans mt-1">
+            <p className="text-xs font-sans mt-1" style={{ color: 'var(--color-secondary-text)' }}>
               Select your desired body style to filter our current inventory.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {CATEGORY_CARDS.map((item) => (
             <div
               key={item.category}
               onClick={() => onSelectCategory(item.category)}
-              className="group bg-[#1B1E24] border border-[#333846] hover:border-[#E3A143] rounded-xl p-3.5 transition-all duration-300 cursor-pointer text-center space-y-3"
+              className="group border rounded-2xl p-4 transition-all duration-300 cursor-pointer text-center space-y-3 shadow-sm hover:shadow-md hover:border-[var(--color-primary-text)] theme-transition"
+              style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}
             >
-              <div className="h-28 w-full rounded-lg overflow-hidden bg-[#252932] relative">
+              <div className="h-32 w-full rounded-xl overflow-hidden relative" style={{ backgroundColor: 'var(--color-surface)' }}>
                 <img
                   src={item.image}
                   alt={item.label}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <div>
-                <span className="font-signage text-sm font-bold text-[#F3F0E9] group-hover:text-[#E3A143] block uppercase tracking-wider">
-                  {item.label}
-                </span>
-                <span className="text-[10px] font-signage uppercase text-[#454C5C] tracking-wider block mt-0.5">
-                  {item.count}
-                </span>
+              <div className="flex items-center justify-between pt-1">
+                <div className="text-left">
+                  <span className="font-heading text-sm font-bold block tracking-tight group-hover:text-[var(--color-primary-text)]" style={{ color: 'var(--color-primary-text)' }}>
+                    {item.label}
+                  </span>
+                  <span className="text-[11px] font-sans block mt-0.5" style={{ color: 'var(--color-secondary-text)' }}>
+                    {item.count}
+                  </span>
+                </div>
+                <div className="w-7 h-7 rounded-full border flex items-center justify-center group-hover:bg-[#111111] group-hover:text-white transition-colors theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)' }}>
+                  <ChevronRight className="w-4 h-4" />
+                </div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 2. Explore Our Premium Brands Section */}
-      <section className="bg-[#1B1E24] border border-[#333846] rounded-2xl p-6 sm:p-8 space-y-6">
-        <div className="flex items-center justify-between border-b border-[#333846] pb-4">
+      {/* 2. Explore Our Premium Brands Section (DESIGN_SYSTEM.md Section 13) */}
+      <section id="brands" className="border rounded-3xl p-6 sm:p-10 space-y-6 theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+        <div className="flex items-center justify-between border-b pb-4" style={{ borderColor: 'var(--color-divider)' }}>
           <div>
-            <h2 className="font-signage text-xl sm:text-2xl font-bold tracking-wide text-[#F3F0E9] uppercase">
+            <h2 className="font-heading text-xl sm:text-2xl font-bold tracking-tight" style={{ color: 'var(--color-primary-text)' }}>
               Explore Our Premium Brands
             </h2>
-            <p className="text-xs text-[#F3F0E9]/50 font-sans mt-0.5">
+            <p className="text-xs font-sans mt-0.5" style={{ color: 'var(--color-secondary-text)' }}>
               Direct access to flagship inventory from world-renowned luxury marques.
             </p>
           </div>
@@ -136,12 +145,13 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
             <button
               key={brand.name}
               onClick={() => onSearch({ make: brand.name })}
-              className="bg-[#252932] border border-[#333846] rounded-xl p-5 text-center hover:border-[#E3A143] transition-all group hover:bg-[#2A2E39]"
+              className="border rounded-2xl p-5 text-center hover:border-[var(--color-primary-text)] transition-all group shadow-sm hover:shadow-md theme-transition"
+              style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}
             >
-              <span className="font-signage text-xl font-bold tracking-widest text-[#F3F0E9] group-hover:text-[#E3A143] block uppercase">
+              <span className="font-heading text-xl font-extrabold tracking-widest block uppercase group-hover:text-[var(--color-primary-text)]" style={{ color: 'var(--color-primary-text)' }}>
                 {brand.mark}
               </span>
-              <span className="text-[10px] font-signage uppercase text-[#454C5C] tracking-wider block mt-1">
+              <span className="text-[10px] font-semibold uppercase tracking-wider block mt-1" style={{ color: 'var(--color-muted-text)' }}>
                 {brand.origin}
               </span>
             </button>
@@ -150,8 +160,8 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
       </section>
 
       {/* 3. Services Showcase Section */}
-      <section className="bg-[#1B1E24] border border-[#333846] rounded-2xl p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        <div className="lg:col-span-5 rounded-xl overflow-hidden bg-[#252932] h-64 sm:h-80 border border-[#333846]">
+      <section className="border rounded-3xl p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-sm theme-transition" style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}>
+        <div className="lg:col-span-5 rounded-2xl overflow-hidden h-64 sm:h-80 border" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
           <img
             src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1000&q=80"
             alt="Showroom Services"
@@ -161,59 +171,59 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
 
         <div className="lg:col-span-7 space-y-6">
           <div>
-            <span className="font-signage text-xs font-semibold tracking-widest text-[#E3A143] uppercase block mb-1">
+            <span className="text-xs font-semibold tracking-widest uppercase block mb-1" style={{ color: 'var(--color-secondary-text)' }}>
               Excellence in Automotive Retail
             </span>
-            <h2 className="font-signage text-2xl sm:text-3xl font-bold tracking-wide text-[#F3F0E9] uppercase">
+            <h2 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight" style={{ color: 'var(--color-primary-text)' }}>
               This Is What We Do And We Do It Perfectly
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="bg-[#252932] border border-[#333846] p-4 rounded-xl space-y-1.5">
-              <div className="flex items-center gap-2 text-[#E3A143]">
+            <div className="border p-5 rounded-2xl space-y-1.5 theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+              <div className="flex items-center gap-2" style={{ color: 'var(--color-primary-text)' }}>
                 <Car className="w-5 h-5" />
-                <h4 className="font-signage text-sm font-bold uppercase tracking-wider text-[#F3F0E9]">
+                <h4 className="font-heading text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-text)' }}>
                   Pre-Orders
                 </h4>
               </div>
-              <p className="text-xs text-[#F3F0E9]/60 font-sans leading-relaxed">
+              <p className="text-xs font-sans leading-relaxed" style={{ color: 'var(--color-secondary-text)' }}>
                 Pre-order custom specifications directly from top manufacturers globally.
               </p>
             </div>
 
-            <div className="bg-[#252932] border border-[#333846] p-4 rounded-xl space-y-1.5">
-              <div className="flex items-center gap-2 text-[#6FA787]">
+            <div className="border p-5 rounded-2xl space-y-1.5 theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+              <div className="flex items-center gap-2 text-[#22C55E]">
                 <DollarSign className="w-5 h-5" />
-                <h4 className="font-signage text-sm font-bold uppercase tracking-wider text-[#F3F0E9]">
+                <h4 className="font-heading text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-text)' }}>
                   Sell Your Car
                 </h4>
               </div>
-              <p className="text-xs text-[#F3F0E9]/60 font-sans leading-relaxed">
+              <p className="text-xs font-sans leading-relaxed" style={{ color: 'var(--color-secondary-text)' }}>
                 Get competitive valuation and immediate payout for your luxury vehicle.
               </p>
             </div>
 
-            <div className="bg-[#252932] border border-[#333846] p-4 rounded-xl space-y-1.5">
-              <div className="flex items-center gap-2 text-[#5B7A99]">
+            <div className="border p-5 rounded-2xl space-y-1.5 theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+              <div className="flex items-center gap-2 text-[#3B82F6]">
                 <Shield className="w-5 h-5" />
-                <h4 className="font-signage text-sm font-bold uppercase tracking-wider text-[#F3F0E9]">
+                <h4 className="font-heading text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-text)' }}>
                   Certified Showroom
                 </h4>
               </div>
-              <p className="text-xs text-[#F3F0E9]/60 font-sans leading-relaxed">
+              <p className="text-xs font-sans leading-relaxed" style={{ color: 'var(--color-secondary-text)' }}>
                 Official dealership with physical locations and verified warranty coverage.
               </p>
             </div>
 
-            <div className="bg-[#252932] border border-[#333846] p-4 rounded-xl space-y-1.5">
-              <div className="flex items-center gap-2 text-[#F0B65C]">
+            <div className="border p-5 rounded-2xl space-y-1.5 theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+              <div className="flex items-center gap-2 text-[#F59E0B]">
                 <Wrench className="w-5 h-5" />
-                <h4 className="font-signage text-sm font-bold uppercase tracking-wider text-[#F3F0E9]">
+                <h4 className="font-heading text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-text)' }}>
                   Auto Services
                 </h4>
               </div>
-              <p className="text-xs text-[#F3F0E9]/60 font-sans leading-relaxed">
+              <p className="text-xs font-sans leading-relaxed" style={{ color: 'var(--color-secondary-text)' }}>
                 Comprehensive maintenance and precision tuning by certified technicians.
               </p>
             </div>
@@ -223,26 +233,26 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
 
       {/* 4. Dual Call-to-Action Banners */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="relative rounded-2xl overflow-hidden bg-[#1B1E24] border border-[#333846] p-8 min-h-[220px] flex flex-col justify-between group">
+        <div className="relative rounded-3xl overflow-hidden bg-[#111111] p-8 min-h-[220px] flex flex-col justify-between group shadow-md text-white theme-transition">
           <div className="absolute inset-0 z-0">
             <img
               src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1000&q=80"
               alt="Sell Car"
-              className="w-full h-full object-cover brightness-[0.3] group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover brightness-[0.35] group-hover:scale-105 transition-transform duration-500"
             />
           </div>
           <div className="relative z-10 space-y-2">
-            <h3 className="font-signage text-2xl font-bold uppercase tracking-wide text-[#F3F0E9]">
+            <h3 className="font-heading text-2xl font-bold tracking-tight">
               Do You Want to Sell a Car?
             </h3>
-            <p className="text-xs text-[#F3F0E9]/70 font-sans max-w-sm">
+            <p className="text-xs text-white/80 font-sans max-w-sm">
               We are committed to providing our customers with exceptional service and top-tier valuations.
             </p>
           </div>
           <div className="relative z-10 pt-4">
             <button
               onClick={onOpenAuth}
-              className="btn-primary py-2.5 px-5 rounded-lg text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2"
+              className="bg-white text-[#111111] hover:bg-white/90 py-2.5 px-6 rounded-full text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2 transition-colors"
             >
               <span>Get Started</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -250,26 +260,26 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
           </div>
         </div>
 
-        <div className="relative rounded-2xl overflow-hidden bg-[#1B1E24] border border-[#333846] p-8 min-h-[220px] flex flex-col justify-between group">
+        <div className="relative rounded-3xl overflow-hidden bg-[#111111] p-8 min-h-[220px] flex flex-col justify-between group shadow-md text-white theme-transition">
           <div className="absolute inset-0 z-0">
             <img
               src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1000&q=80"
               alt="Looking for Car"
-              className="w-full h-full object-cover brightness-[0.3] group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover brightness-[0.35] group-hover:scale-105 transition-transform duration-500"
             />
           </div>
           <div className="relative z-10 space-y-2">
-            <h3 className="font-signage text-2xl font-bold uppercase tracking-wide text-[#F3F0E9]">
+            <h3 className="font-heading text-2xl font-bold tracking-tight">
               Are You Looking For a Car?
             </h3>
-            <p className="text-xs text-[#F3F0E9]/70 font-sans max-w-sm">
+            <p className="text-xs text-white/80 font-sans max-w-sm">
               Explore our curated showroom collection with instant reservation and immediate delivery options.
             </p>
           </div>
           <div className="relative z-10 pt-4">
             <a
               href="#showroom-inventory"
-              className="btn-ghost py-2.5 px-5 rounded-lg text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2 border-[#E3A143] text-[#E3A143] hover:bg-[#E3A143] hover:text-[#13151A]"
+              className="bg-white/20 hover:bg-white text-white hover:text-[#111111] backdrop-blur-md py-2.5 px-6 rounded-full text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2 transition-colors border border-white/30"
             >
               <span>Explore Inventory</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -279,32 +289,32 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
       </section>
 
       {/* 5. Client Testimonials Section */}
-      <section className="space-y-6">
+      <section className="space-y-6 theme-transition">
         <div className="text-center space-y-1">
-          <span className="font-signage text-xs font-semibold tracking-widest text-[#E3A143] uppercase">
+          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: 'var(--color-secondary-text)' }}>
             Client Experiences
           </span>
-          <h2 className="font-signage text-2xl sm:text-3xl font-bold tracking-wide text-[#F3F0E9] uppercase">
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight" style={{ color: 'var(--color-primary-text)' }}>
             See What Our Clients Are Saying
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TESTIMONIALS.map((t, idx) => (
-            <div key={idx} className="bg-[#1B1E24] border border-[#333846] rounded-xl p-6 flex flex-col justify-between space-y-4">
-              <div className="flex gap-1 text-[#E3A143]">
+            <div key={idx} className="border rounded-3xl p-6 flex flex-col justify-between space-y-4 shadow-sm theme-transition" style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}>
+              <div className="flex gap-1 text-[#F59E0B]">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-[#E3A143]" />
+                  <Star key={i} className="w-4 h-4 fill-[#F59E0B]" />
                 ))}
               </div>
-              <p className="text-xs text-[#F3F0E9]/80 font-sans leading-relaxed italic">
+              <p className="text-xs font-sans leading-relaxed italic" style={{ color: 'var(--color-primary-text)', opacity: 0.8 }}>
                 "{t.quote}"
               </p>
-              <div className="flex items-center gap-3 pt-2 border-t border-[#333846]">
+              <div className="flex items-center gap-3 pt-3 border-t" style={{ borderColor: 'var(--color-divider)' }}>
                 <img src={t.avatar} alt={t.author} className="w-10 h-10 rounded-full object-cover" />
                 <div>
-                  <h4 className="font-sans text-xs font-semibold text-[#F3F0E9]">{t.author}</h4>
-                  <p className="text-[10px] text-[#F3F0E9]/50 font-sans">{t.title}</p>
+                  <h4 className="font-heading text-xs font-bold" style={{ color: 'var(--color-primary-text)' }}>{t.author}</h4>
+                  <p className="text-[10px] font-sans" style={{ color: 'var(--color-secondary-text)' }}>{t.title}</p>
                 </div>
               </div>
             </div>
@@ -312,67 +322,67 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
         </div>
       </section>
 
-      {/* 6. Comprehensive Luxury Footer */}
-      <footer className="bg-[#1B1E24] border-t border-[#333846] rounded-2xl p-8 sm:p-12 space-y-10">
+      {/* 6. Clean Luxury Footer */}
+      <footer className="bg-[#111111] text-white rounded-3xl p-8 sm:p-12 space-y-10 theme-transition">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <div className="lg:col-span-2 space-y-3">
-            <span className="font-signage text-2xl font-bold tracking-wider text-[#E3A143] uppercase block">
+            <span className="font-heading text-2xl font-extrabold tracking-wider text-white uppercase block">
               ROADSTEAD MOTORS
             </span>
-            <p className="text-xs text-[#F3F0E9]/60 font-sans leading-relaxed max-w-sm">
-              DriveLine & Roadstead Motors offer verified luxury automotive retail, high-performance inventory, and seamless atomic purchasing.
+            <p className="text-xs text-white/70 font-sans leading-relaxed max-w-sm">
+              Roadstead Motors offers verified luxury automotive retail, high-performance inventory, and seamless atomic purchasing.
             </p>
-            <div className="pt-2 text-xs text-[#F3F0E9]/70 space-y-1 font-sans">
+            <div className="pt-2 text-xs text-white/80 space-y-1 font-sans">
               <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-[#E3A143]" />
+                <MapPin className="w-3.5 h-3.5 text-white/60" />
                 <span>Showroom Floor, Luxury Motor Hub, India</span>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-[#E3A143]" />
+                <Phone className="w-3.5 h-3.5 text-white/60" />
                 <span>+91 (800) 555-ROAD</span>
               </div>
             </div>
           </div>
 
           <div>
-            <h4 className="font-signage text-xs font-bold text-[#F3F0E9] uppercase tracking-wider mb-3">
+            <h4 className="font-heading text-xs font-bold text-white uppercase tracking-wider mb-3">
               Quick Links
             </h4>
-            <ul className="space-y-2 text-xs text-[#F3F0E9]/60 font-sans">
-              <li><a href="#showroom-inventory" className="hover:text-[#E3A143]">Showroom Inventory</a></li>
-              <li><button onClick={onOpenAuth} className="hover:text-[#E3A143]">Customer Sign In</button></li>
-              <li><button onClick={onOpenAuth} className="hover:text-[#E3A143]">Register Account</button></li>
+            <ul className="space-y-2 text-xs text-white/70 font-sans">
+              <li><a href="#showroom-inventory" className="hover:text-white">Showroom Inventory</a></li>
+              <li><button onClick={onOpenAuth} className="hover:text-white">Customer Sign In</button></li>
+              <li><button onClick={onOpenAuth} className="hover:text-white">Register Account</button></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-signage text-xs font-bold text-[#F3F0E9] uppercase tracking-wider mb-3">
+            <h4 className="font-heading text-xs font-bold text-white uppercase tracking-wider mb-3">
               Vehicle Categories
             </h4>
-            <ul className="space-y-2 text-xs text-[#F3F0E9]/60 font-sans">
-              <li><button onClick={() => onSelectCategory('SEDAN')} className="hover:text-[#E3A143]">Executive Sedans</button></li>
-              <li><button onClick={() => onSelectCategory('SUV')} className="hover:text-[#E3A143]">Luxury SUVs</button></li>
-              <li><button onClick={() => onSelectCategory('COUPE')} className="hover:text-[#E3A143]">Sport Coupes</button></li>
-              <li><button onClick={() => onSelectCategory('TRUCK')} className="hover:text-[#E3A143]">Performance Trucks</button></li>
+            <ul className="space-y-2 text-xs text-white/70 font-sans">
+              <li><button onClick={() => onSelectCategory('SEDAN')} className="hover:text-white">Executive Sedans</button></li>
+              <li><button onClick={() => onSelectCategory('SUV')} className="hover:text-white">Luxury SUVs</button></li>
+              <li><button onClick={() => onSelectCategory('COUPE')} className="hover:text-white">Sport Coupes</button></li>
+              <li><button onClick={() => onSelectCategory('TRUCK')} className="hover:text-white">Performance Trucks</button></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-signage text-xs font-bold text-[#F3F0E9] uppercase tracking-wider mb-3">
+            <h4 className="font-heading text-xs font-bold text-white uppercase tracking-wider mb-3">
               Showroom Hours
             </h4>
-            <div className="space-y-1.5 text-xs text-[#F3F0E9]/60 font-sans">
+            <div className="space-y-1.5 text-xs text-white/70 font-sans">
               <div className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-[#E3A143]" />
+                <Clock className="w-3.5 h-3.5 text-white/60" />
                 <span>Mon – Fri: 09:00 AM – 08:00 PM</span>
               </div>
               <p className="pl-5">Saturday: 10:00 AM – 06:00 PM</p>
-              <p className="pl-5 text-[#C4574A]">Sunday: Closed</p>
+              <p className="pl-5 text-red-400">Sunday: Closed</p>
             </div>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-[#333846] flex flex-col sm:flex-row items-center justify-between text-xs text-[#454C5C] font-signage uppercase tracking-wider">
+        <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-white/50 font-sans uppercase tracking-wider">
           <p>© 2026 Roadstead Motors. All rights reserved.</p>
           <p>Privacy Policy · Terms & Conditions</p>
         </div>

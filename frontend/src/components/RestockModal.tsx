@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Vehicle } from '../types';
 import { X, PlusCircle, AlertCircle } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 interface RestockModalProps {
   vehicle: Vehicle | null;
@@ -17,6 +18,7 @@ export const RestockModal: React.FC<RestockModalProps> = ({
   onRestock,
   isLoading,
 }) => {
+  const { theme } = useTheme();
   const [quantity, setQuantity] = useState<number>(5);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,32 +60,41 @@ export const RestockModal: React.FC<RestockModalProps> = ({
   return (
     <div
       onClick={isLoading ? undefined : onClose}
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center p-4"
+      style={{ backgroundColor: 'var(--color-overlay)' }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-[#E5E7EB] rounded-3xl p-6 max-w-sm w-full shadow-2xl relative text-[#18181B] animate-in"
+        className="rounded-3xl p-6 max-w-sm w-full shadow-2xl relative animate-in theme-transition"
+        style={{
+          backgroundColor: 'var(--color-card)',
+          border: '1px solid var(--color-border)',
+          color: 'var(--color-primary-text)',
+        }}
       >
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-[#9CA3AF] hover:text-[#18181B] transition-colors p-1"
+          className="absolute top-5 right-5 transition-colors p-1"
+          style={{ color: 'var(--color-muted-text)' }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-primary-text)'; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-muted-text)'; }}
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className="flex items-center gap-2 mb-1">
           <PlusCircle className="w-5 h-5 text-[#22C55E]" />
-          <h2 className="font-heading text-xl font-bold tracking-tight text-[#18181B] uppercase">
+          <h2 className="font-heading text-xl font-bold tracking-tight uppercase">
             Restock Inventory
           </h2>
         </div>
 
-        <p className="text-xs text-[#6B7280] font-sans mb-5">
-          Add stock for <span className="text-[#18181B] font-semibold">{vehicle.make} {vehicle.model}</span> (Current stock: {vehicle.quantity})
+        <p className="text-xs font-sans mb-5" style={{ color: 'var(--color-secondary-text)' }}>
+          Add stock for <span style={{ color: 'var(--color-primary-text)' }} className="font-semibold">{vehicle.make} {vehicle.model}</span> (Current stock: {vehicle.quantity})
         </p>
 
         {error && (
-          <div className="mb-4 bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-3 flex items-center gap-2 text-xs text-[#EF4444]">
+          <div className="mb-4 bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-3 flex items-center gap-2 text-xs" style={{ color: 'var(--color-error)' }}>
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -91,7 +102,7 @@ export const RestockModal: React.FC<RestockModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-xs font-semibold tracking-wider text-[#6B7280] uppercase block mb-1.5">
+            <label className="text-xs font-semibold tracking-wider uppercase block mb-1.5" style={{ color: 'var(--color-secondary-text)' }}>
               Quantity to Add (Positive Integer)
             </label>
             <input
@@ -101,15 +112,29 @@ export const RestockModal: React.FC<RestockModalProps> = ({
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               placeholder="e.g. 5"
-              className="w-full bg-[#FAFAFA] border border-[#E5E7EB] rounded-2xl px-4 py-2.5 text-xs text-[#18181B] focus:border-[#111111] focus:bg-white outline-none font-sans"
+              className="w-full rounded-2xl px-4 py-2.5 text-xs outline-none font-sans"
+              style={{
+                backgroundColor: 'var(--color-input-bg)',
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-primary-text)',
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-primary-dark)';
+                e.currentTarget.style.backgroundColor = 'var(--color-card)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-border)';
+                e.currentTarget.style.backgroundColor = 'var(--color-input-bg)';
+              }}
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#F3F4F6]">
+          <div className="flex items-center justify-end gap-3 pt-4" style={{ borderTop: '1px solid var(--color-divider)' }}>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-full text-xs font-semibold text-[#6B7280] border border-[#E5E7EB] hover:bg-[#FAFAFA]"
+              className="px-5 py-2.5 rounded-full text-xs font-semibold hover:opacity-80"
+              style={{ color: 'var(--color-secondary-text)', border: '1px solid var(--color-border)' }}
             >
               Cancel
             </button>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { vehicleApi } from './services/api';
 import type { Vehicle, SearchFilters as SearchFiltersType, VehicleFormData } from './types';
 import { Navbar } from './components/Navbar';
@@ -160,7 +161,7 @@ export const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#18181B] flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans theme-transition" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-primary-text)' }}>
       <Navbar
         onOpenAuth={() => setIsAuthModalOpen(true)}
         onOpenAddVehicle={handleOpenAddVehicle}
@@ -176,14 +177,14 @@ export const AppContent: React.FC = () => {
 
         {/* Showroom Inventory Headline & Filters */}
         <div id="showroom-inventory" className="space-y-1">
-          <div className="flex items-center gap-2 text-[#6B7280] text-xs uppercase tracking-widest font-semibold">
-            <Layers className="w-4 h-4 text-[#111111]" />
+          <div className="flex items-center gap-2 text-xs uppercase tracking-widest font-semibold theme-transition" style={{ color: 'var(--color-secondary-text)' }}>
+            <Layers className="w-4 h-4" style={{ color: 'var(--color-primary-dark)' }} />
             <span>Showroom Inventory Management</span>
           </div>
-          <h2 className="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-[#18181B] uppercase">
+          <h2 className="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight uppercase theme-transition" style={{ color: 'var(--color-primary-text)' }}>
             EXPLORE SHOWROOM INVENTORY
           </h2>
-          <p className="text-xs sm:text-sm text-[#6B7280] max-w-2xl font-sans">
+          <p className="text-xs sm:text-sm max-w-2xl font-sans theme-transition" style={{ color: 'var(--color-secondary-text)' }}>
             Real-time dealership vehicle stock, price specifications in INR (₹), and instant purchasing.
           </p>
         </div>
@@ -199,47 +200,48 @@ export const AppContent: React.FC = () => {
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white border border-[#E5E7EB] rounded-3xl p-5 space-y-4 animate-shimmer shadow-sm">
-                <div className="w-full aspect-[16/10] rounded-2xl bg-[#FAFAFA]" />
-                <div className="h-6 w-3/4 bg-[#FAFAFA] rounded-md" />
-                <div className="h-8 w-1/2 bg-[#FAFAFA] rounded-md" />
-                <div className="h-12 w-full bg-[#FAFAFA] rounded-full mt-4" />
+              <div key={i} className="border rounded-3xl p-5 space-y-4 animate-shimmer shadow-sm theme-transition" style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}>
+                <div className="w-full aspect-[16/10] rounded-2xl theme-transition" style={{ backgroundColor: 'var(--color-surface)' }} />
+                <div className="h-6 w-3/4 rounded-md theme-transition" style={{ backgroundColor: 'var(--color-surface)' }} />
+                <div className="h-8 w-1/2 rounded-md theme-transition" style={{ backgroundColor: 'var(--color-surface)' }} />
+                <div className="h-12 w-full rounded-full mt-4 theme-transition" style={{ backgroundColor: 'var(--color-surface)' }} />
               </div>
             ))}
           </div>
         ) : isError ? (
-          <div className="bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-6 text-center text-xs text-[#EF4444] my-8">
+          <div className="border rounded-2xl p-6 text-center text-xs my-8 theme-transition" style={{ backgroundColor: 'color-mix(in srgb, var(--color-error) 10%, var(--color-card))', borderColor: 'color-mix(in srgb, var(--color-error) 30%, var(--color-border))', color: 'var(--color-error)' }}>
             <p className="font-semibold text-sm mb-1">Failed to load vehicle inventory</p>
             <p>{(error as any)?.message || 'Please check backend server connection.'}</p>
             <button
               onClick={() => refetch()}
-              className="btn-ghost mt-4 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider text-[#18181B]"
+              className="btn-ghost mt-4 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider"
             >
               Retry Connection
             </button>
           </div>
         ) : vehicles.length === 0 ? (
-          <div className="bg-[#FAFAFA] border border-[#E5E7EB] rounded-3xl p-12 text-center my-8 shadow-sm">
-            <Car className="w-12 h-12 text-[#9CA3AF] mx-auto mb-3" />
-            <h3 className="font-heading text-xl font-bold uppercase text-[#18181B] mb-1">
+          <div className="border rounded-3xl p-12 text-center my-8 shadow-sm theme-transition" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+            <Car className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-muted-text)' }} />
+            <h3 className="font-heading text-xl font-bold uppercase mb-1 theme-transition" style={{ color: 'var(--color-primary-text)' }}>
               No Vehicles Found
             </h3>
-            <p className="text-xs text-[#6B7280] font-sans mb-4">
+            <p className="text-xs font-sans mb-4 theme-transition" style={{ color: 'var(--color-secondary-text)' }}>
               No vehicle matches your active filter criteria. Try adjusting or clearing search parameters.
             </p>
             <button
               onClick={() => setFilters({})}
-              className="btn-ghost px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#111111] border-[#111111]"
+              className="btn-ghost px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider"
             >
               Clear All Filters
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {vehicles.map((vehicle) => (
+            {vehicles.map((vehicle, index) => (
               <VehicleCard
                 key={vehicle.id}
                 vehicle={vehicle}
+                index={index}
                 onPurchase={handlePurchase}
                 onEdit={handleOpenEditVehicle}
                 onDelete={(id) => deleteMutation.mutate(id)}
@@ -294,9 +296,11 @@ export const AppContent: React.FC = () => {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

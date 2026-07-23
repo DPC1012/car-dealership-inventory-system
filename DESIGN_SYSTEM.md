@@ -1,240 +1,712 @@
----
-name: Roadstead Motors
-description: Car dealership inventory platform — browse, search, and manage the lot.
-colors:
-  graphite-950: "#13151A"
-  graphite-900: "#1B1E24"
-  graphite-800: "#252932"
-  graphite-700: "#333846"
-  graphite-600: "#454C5C"
-  cream: "#F3F0E9"
-  amber-400: "#F0B65C"
-  amber-500: "#E3A143"
-  amber-600: "#C4832B"
-  moss: "#6FA787"
-  moss-light: "#1E2A24"
-  rust: "#C4574A"
-  rust-light: "#2C1E1C"
-  chrome: "#5B7A99"
-  chrome-light: "#1E262F"
-  border: "rgba(243,240,233,0.10)"
-  nav-bg: "rgba(27,30,36,0.92)"
-  amber-rgb: "227, 161, 67"
-  moss-rgb: "111, 167, 135"
-  rust-rgb: "196, 87, 74"
-  chrome-rgb: "91, 122, 153"
-typography:
-  display:
-    fontFamily: "Barlow Condensed, sans-serif"
-    fontSize: "clamp(40px, 5.5vw, 80px)"
-    fontWeight: 600
-    lineHeight: 0.98
-    letterSpacing: "0.01em"
-    textTransform: uppercase
-  headline:
-    fontFamily: "Barlow Condensed, sans-serif"
-    fontSize: "clamp(28px, 3.5vw, 44px)"
-    fontWeight: 600
-    lineHeight: 1.05
-    textTransform: uppercase
-  title:
-    fontFamily: "Inter, sans-serif"
-    fontSize: 20
-    fontWeight: 600
-    lineHeight: 1.25
-  body:
-    fontFamily: "Inter, sans-serif"
-    fontSize: 15
-    fontWeight: 400
-    lineHeight: 1.65
-  label:
-    fontFamily: "Barlow Condensed, sans-serif"
-    fontSize: 11
-    fontWeight: 600
-    letterSpacing: "0.14em"
-    textTransform: uppercase
-rounded:
-  sm: 4px
-  md: 6px
-  lg: 10px
-  xl: 14px
-  full: 50%
-spacing:
-  xs: 8px
-  sm: 16px
-  md: 24px
-  lg: 40px
-  xl: 56px
-  container: 1152px
-components:
-  button-primary:
-    backgroundColor: "{colors.amber-500}"
-    textColor: "{colors.graphite-950}"
-    rounded: "{rounded.sm}"
-    padding: "10px 24px"
-    typography: "title"
-    fontWeight: 600
-  button-ghost:
-    backgroundColor: transparent
-    textColor: "{colors.cream}"
-    rounded: "{rounded.sm}"
-    padding: "10px 20px"
-    border: "1px solid {colors.border}"
-    typography: "body"
-    fontWeight: 500
-  card-default:
-    backgroundColor: "{colors.graphite-900}"
-    rounded: "{rounded.md}"
-    padding: "{spacing.sm}"
-    border: "1px solid {colors.border}"
-  input-default:
-    backgroundColor: "{colors.graphite-800}"
-    rounded: "{rounded.sm}"
-    padding: "10px 14px"
-    border: "1px solid {colors.border}"
-    typography: "body"
-    fontSize: 14
+# Design System: LuxeDrive Motors
+
+> **Creative North Star:** *"Luxury Automotive Marketplace."*
+
+LuxeDrive is inspired by premium automotive brands such as **Mercedes-Benz, BMW, Porsche, Audi, and Tesla**. The experience should feel like stepping into a luxury dealership—clean, spacious, elegant, and effortless.
+
+The website is **image-first**, **minimal**, and **premium**, allowing vehicles to be the center of attention while typography and whitespace provide hierarchy.
+
 ---
 
-# Design System: Roadstead Motors
+# 1. Design Principles
 
-## 1. Overview
+## Photography First
 
-**Creative North Star: "The Showroom Floor"**
+Vehicle photography is the hero of the interface.
 
-Roadstead's design language is the dealership floor after closing — halogen light on painted steel, a clipboard-and-spec-sheet clarity to how each vehicle is presented. The graphite backdrop is deliberately dark and slightly cool, like polished concrete under showroom lighting, never the near-black-with-a-single-neon-accent look that reads as generic dashboard chrome. Against it, a single amber accent does the work of halogen bulbs: it's what your eye is drawn to, and nothing else competes with it.
+- Images should dominate every landing page.
+- Cards should always showcase high-quality vehicle images.
+- Images are the product—not decoration.
 
-This is a system built for scanning inventory fast — a buyer or an admin should be able to read stock status, price, and category at a glance, the way you'd read a window sticker. Condensed, uppercase display type gives every heading and badge the feel of dealership signage; body copy stays quiet and legible underneath it. Every element answers one question: does this help someone assess a vehicle faster?
+---
 
-**Key Characteristics:**
-- Showroom-dark: graphite is cool and deliberate, not a generic "AI dark mode" near-black
-- Signage typography: condensed uppercase (Barlow Condensed) for headings, labels, and badges; a plain grotesk (Inter) for body and data
-- Single-voice accent: amber is the only warm, saturated color — used sparingly, for action and price
-- Status-coded, not decorative: moss (in stock), rust (sold out / destructive), chrome (informational / admin) each map to one meaning only
-- Flat until touched: cards and buttons sit still at rest; borders do the separating, not shadows
+## Minimal Luxury
 
-## 2. Colors: The Showroom Palette
+Luxury comes from simplicity.
 
-Dark neutrals carry almost the whole interface. Amber is spent deliberately — on price, on primary actions, on nothing else.
+Avoid visual clutter.
 
-### Primary
+Instead, focus on:
 
-- **Amber** (#E3A143 / oklch(74% 0.13 70)): The single voice. Primary buttons, price display, active nav links, focus rings. Used on price because price is the one number every visitor scans for first. Kept off backgrounds, borders, and decorative fills — its rarity is what makes it read as "halogen light," not wallpaper.
+- Generous whitespace
+- Beautiful typography
+- Consistent spacing
+- Clean layouts
+- Elegant imagery
 
-### Secondary — status-coded, one meaning each
+---
 
-- **Moss** (#6FA787 / oklch(68% 0.06 155)): In-stock, success, confirmed purchase. Never reused for anything else, so a green badge is always unambiguously good news.
-- **Rust** (#C4574A / oklch(58% 0.13 30)): Sold out, low stock warning, destructive actions (delete). The one color that means "pay attention here."
-- **Chrome** (#5B7A99 / oklch(60% 0.06 240)): Structural/informational — admin badges, completed-order states, metadata callouts. The cool, quiet counterpoint that never competes with amber.
+## Soft Geometry
 
-### Neutral
+The UI should feel modern and approachable.
 
-- **Graphite 950 → 600**: A five-step dark scale from page background (950) up through card surface (900), raised surface (800), borders/dividers (700), to secondary text (600). Each step is a deliberate value, not an opacity trick on one gray.
-- **Cream** (#F3F0E9): Primary text on dark surfaces. Warm off-white, not pure white — keeps long specs sheets and descriptions easy on the eye.
-- **Border** (rgba(243,240,233,0.10)): Faint, translucent separation between surfaces. Never a hard line.
+Use:
 
-### Named Rules
+- Rounded cards
+- Rounded buttons
+- Soft shadows
+- Comfortable spacing
 
-**The One-Bulb Rule.** Amber appears in exactly one role per screen at a time — action or price, never both competing for attention in the same glance. A page with an amber button and amber price nearby is fine; an amber badge, amber border, and amber button stacked together is not.
+Avoid sharp corners and overly aggressive styling.
 
-**The Status-Lock Rule.** Moss, rust, and chrome are locked to their single meaning (trust/success, alert/destructive, informational) across the entire app. Never borrow rust for a "featured" badge because it "looks good" — if it doesn't mean "stop and look," it isn't rust.
+---
 
-**The Concrete-Not-Void Rule.** Graphite 950 is a cool, deliberate dark — not pure black. Pure black backgrounds read as an empty void; this palette should read as a lit room at night.
+## Calm Interface
 
-## 3. Typography
+The interface should never feel busy.
 
-**Display/Heading Font:** Barlow Condensed
-**Body Font:** Inter
-**Label Font:** Barlow Condensed (uppercase, tracked)
+Every section should breathe.
 
-**Character:** Condensed uppercase type is the signage language of the app — it's how a dealership actually letters its price boards and category tags, so headings, plate-style badges, and buttons all borrow that voice. Inter carries everything that needs to be read at length or scanned as data: descriptions, form labels, table values. The two fonts don't blend into each other — the switch between them is itself a signal of "signage" vs. "detail."
+Each component should have a clear purpose.
 
-### Hierarchy
+---
 
-- **Display** (600, clamp(40–80px), 0.98 line-height, uppercase): Page-level hero heading only ("Inventory"). One per page.
-- **Headline** (600, clamp(28–44px), uppercase): Section headers, modal titles.
-- **Title** (600, 20px, Inter): Vehicle names (make + model), card headings — deliberately in the body face, not condensed, since these are the specific facts a buyer is scanning for.
-- **Body** (400, 15px, 1.65 line-height, Inter): Descriptions, form text, table values. Capped at ~70ch.
-- **Label** (600, 11px, 0.14em tracking, uppercase, Barlow Condensed): Category badges, stock-status text, form field labels, button text — the "signage" register.
+# 2. Color System
 
-### Named Rules
+## Neutral Palette
 
-**The Signage-vs-Spec Split.** Barlow Condensed is reserved for things that behave like signage (headings, badges, buttons, labels) — never for vehicle names, descriptions, or anything a user needs to read multiple words of quickly. Vehicle make/model stays in Inter Title weight so it's legible at a glance, not stylized.
+| Token | Color |
+|--------|--------|
+| Background | `#FFFFFF` |
+| Surface | `#FAFAFA` |
+| Card | `#FFFFFF` |
+| Primary Text | `#18181B` |
+| Secondary Text | `#6B7280` |
+| Muted Text | `#9CA3AF` |
+| Border | `#E5E7EB` |
+| Divider | `#F3F4F6` |
 
-**The Price Weight Rule.** Price is always the largest, most amber element on a vehicle card — larger than the make/model title. It is the one place font size itself carries semantic priority.
+---
 
-## 4. Elevation
+## Brand Colors
 
-Flat by default, on the theory that a lot full of identical-looking cards should be told apart by content (make, price, stock) rather than by depth effects. Depth is reserved for things that are actually floating above the page — modals, dropdowns.
+| Token | Color |
+|--------|--------|
+| Primary | `#111111` |
+| Hover | `#27272A` |
+| Active | `#000000` |
+| White | `#FFFFFF` |
 
-### Shadow Vocabulary
+---
 
-- **Ambient Low** (0 4px 24px rgba(0,0,0,0.35)): Modal panels, dropdown menus. Soft and dark, tuned for a dark background (a light-mode shadow recipe looks washed out on graphite).
-- **Border-Only** (no shadow, 1px border): The default state for every card. Hover lightens the border from graphite-700 to graphite-600 rather than adding a shadow — depth cues on a dark background read better as a lit edge than as a cast shadow.
+## Semantic Colors
 
-### Named Rules
+| State | Color |
+|--------|--------|
+| Success | `#22C55E` |
+| Warning | `#F59E0B` |
+| Error | `#EF4444` |
+| Information | `#3B82F6` |
 
-**The Border-Not-Glow Rule.** Interactive feedback on dark surfaces is a border/background shift, not a glow or shadow — shadows barely read against graphite-950 and end up looking like a rendering bug rather than a deliberate effect.
+---
 
-## 5. Components
+## Color Rules
 
-### Buttons
+✅ Use grayscale throughout the interface.
 
-- **Shape:** 4px radius (sm) — square enough to feel like a control panel, not a pill.
-- **Primary (Amber):** graphite-950 text on amber-500 background, 10px/24px padding, Inter title weight. Hover: amber-400 (lighter, not darker — dark UIs read "brighter = active"). Disabled: graphite-700 background, graphite-600 text, `cursor: not-allowed`.
-- **Ghost:** Transparent, 1px graphite-700 border, cream text. Hover: border and text both shift to amber-400.
-- **Destructive:** Transparent, 1px rust/40 border, rust text. Hover: rust/10 background fill. Reserved for delete only — never for "cancel" or neutral dismissal.
+✅ Use accent colors only when necessary.
 
-**States:** 0.2s transition on border/background/color. Focus-visible: 2px amber-400 outline, 2px offset.
+✅ White space should create hierarchy instead of colorful backgrounds.
 
-### Cards (Vehicle / Window Sticker)
+❌ Avoid gradients.
 
-- **Corner Style:** 6px radius (md) — enough to soften, not enough to feel playful.
-- **Background:** graphite-900 on graphite-950 canvas.
-- **Border:** 1px graphite-700, lightens to graphite-600 on hover. No shadow at any state.
-- **Anatomy:** category plate-badge (top-left) + stock-status text (top-right, moss/amber/rust by quantity) → make+model title → amber price → action row (purchase button, then admin-only edit/restock/delete).
-- **Padding:** 20px (sm+).
+❌ Avoid colorful sections.
 
-### Inputs / Fields
+---
 
-- **Style:** 1px graphite-700 border, graphite-800 background, 4px radius.
-- **Focus:** Border shifts to amber-500. No glow ring — consistent with the border-not-glow rule.
-- **Labels:** Always the Label typographic style (uppercase, tracked, graphite-600) positioned above the field, never as placeholder-only text.
+# 3. Typography
 
-### Navigation
+## Font Family
 
-- **Top Nav:** graphite-900 background, 1px graphite-700 bottom border, fixed. Wordmark in Display-adjacent condensed caps with amber "Roadstead" / muted "Motors" two-tone treatment. Admin badge (chrome-bordered) sits next to the user's name when applicable.
+### Headings
 
-### Chips / Badges (Plate-Style)
+**Manrope**
 
-- **Category badge:** graphite-800 background, 1px graphite-600 border, Label typography, graphite-600 text. Modeled on a spec-sheet category tag, not a colorful pill — category is inventory metadata, not a status.
-- **Stock-status text:** No background/border, just colored text (moss / amber / rust) at small size — status is read, not badged, to avoid competing with the category plate for visual weight.
+Fallback:
 
-### Modals
+```
+Inter, sans-serif
+```
 
-- **Structure:** Fixed overlay, black/60 backdrop, graphite-900 panel, 1px graphite-700 border, 6px radius, 24px padding, max-width 28rem.
-- **Title:** Headline typography in amber.
-- **Close/Cancel:** Ghost button; primary action (Save) is the only amber element in the modal, matching the one-bulb rule.
+---
 
-### Toggle / Confirm Actions
+### Body
 
-- Destructive actions (delete) use a native `confirm()` step rather than a custom toggle component — for an admin tool this size, a plain confirmation is more trustworthy than a stylized one that could be misclicked.
+**Inter**
 
-## 6. Do's and Don'ts
+Fallback:
 
-### Do:
-- **Do** treat amber as the single accent — one role (action or price) per screen at a time.
-- **Do** keep moss/rust/chrome locked to their one meaning each: trust, alert, informational.
-- **Do** use Barlow Condensed only for signage-register elements (headings, badges, buttons, labels) — never for vehicle names or long text.
-- **Do** make price the visually dominant number on every vehicle card.
-- **Do** keep cards flat with a border; use border-lightening, not shadow, as the hover cue on dark surfaces.
-- **Do** cap body/description text at ~70ch and keep it in Inter at 15px/1.65.
+```
+sans-serif
+```
 
-### Don't:
-- **Don't** use pure black (#000) for the background — graphite-950 is a deliberate cool dark, not a void.
-- **Don't** apply amber to more than one element type at once (e.g. an amber badge next to an amber button next to amber-bordered card) — it dilutes the "halogen spotlight" effect.
-- **Don't** add drop shadows tuned for light backgrounds — they read as visual noise on graphite; use the border-based hover cue instead.
-- **Don't** turn the category badge into a colored pill — it's inventory metadata (spec-sheet register), not a status indicator; only stock-status text gets color.
-- **Don't** use tiny uppercase eyebrow labels above every section as decoration — reserve Label typography for things that are actually metadata (stock count, category, form field names).
-- **Don't** round cards or buttons past 10px — the showroom identity is squared-off and utilitarian, not soft.
-- **Don't** introduce a fifth accent color for a one-off badge — extend the semantic meaning of an existing one, or reconsider whether that state needs color at all.
+---
+
+## Typography Scale
+
+| Style | Size | Weight |
+|--------|------|---------|
+| Display | 64px | 700 |
+| H1 | 48px | 700 |
+| H2 | 36px | 700 |
+| H3 | 28px | 600 |
+| Card Title | 22px | 600 |
+| Body Large | 18px | 400 |
+| Body | 16px | 400 |
+| Small | 14px | 400 |
+| Caption | 12px | 500 |
+
+---
+
+# 4. Layout
+
+## Container
+
+```
+1280px
+```
+
+Maximum width
+
+```
+1440px
+```
+
+---
+
+## Spacing Scale
+
+```
+4
+8
+12
+16
+24
+32
+48
+64
+96
+120
+```
+
+Use generous vertical spacing between sections.
+
+---
+
+# 5. Border Radius
+
+| Token | Value |
+|--------|-------|
+| Small | 10px |
+| Medium | 16px |
+| Large | 24px |
+| XL | 32px |
+| Pill | 999px |
+
+---
+
+# 6. Shadows
+
+### Card
+
+```css
+0 10px 30px rgba(0,0,0,.04)
+```
+
+---
+
+### Hover
+
+```css
+0 18px 40px rgba(0,0,0,.08)
+```
+
+---
+
+### Modal
+
+```css
+0 24px 60px rgba(0,0,0,.12)
+```
+
+Shadows should remain subtle.
+
+---
+
+# 7. Buttons
+
+## Primary Button
+
+Background
+
+```
+#111111
+```
+
+Text
+
+```
+White
+```
+
+Height
+
+```
+48px
+```
+
+Border Radius
+
+```
+999px
+```
+
+Hover
+
+```
+#27272A
+```
+
+---
+
+## Secondary Button
+
+Background
+
+```
+White
+```
+
+Border
+
+```
+1px solid #E5E7EB
+```
+
+Text
+
+```
+#18181B
+```
+
+Hover
+
+```
+#F5F5F5
+```
+
+---
+
+## Danger Button
+
+Background
+
+```
+#EF4444
+```
+
+Text
+
+```
+White
+```
+
+---
+
+Transition
+
+```
+200ms ease
+```
+
+---
+
+# 8. Navigation
+
+- Transparent over hero section
+- Turns white after scrolling
+- Logo aligned left
+- Navigation centered
+- Authentication buttons aligned right
+- Height: **80px**
+
+---
+
+# 9. Hero Section
+
+The homepage hero should include:
+
+- Full-width luxury vehicle image
+- Vehicle title
+- Vehicle price
+- Call-to-action button
+- Floating search card
+
+Recommended height
+
+```
+720px
+```
+
+---
+
+# 10. Search Card
+
+The search panel floats above the hero image.
+
+Contains:
+
+- Vehicle Type
+- Condition
+- Brand
+- Price Range
+- Search Button
+
+Style:
+
+- White background
+- Rounded corners
+- Soft shadow
+
+---
+
+# 11. Vehicle Cards
+
+Structure
+
+```
+Vehicle Image
+
+↓
+
+Vehicle Name
+
+↓
+
+Year • Fuel • Transmission
+
+↓
+
+Price
+
+↓
+
+Location
+
+↓
+
+Purchase Button
+```
+
+---
+
+Card Specifications
+
+Image Ratio
+
+```
+16:10
+```
+
+Border Radius
+
+```
+20px
+```
+
+Padding
+
+```
+20px
+```
+
+Hover Animation
+
+- Lift slightly
+- Image zoom
+- Shadow increase
+
+---
+
+# 12. Category Cards
+
+Each category card contains:
+
+- Large image
+- Category title
+- CTA button
+
+Hover:
+
+- Image zoom
+- Slight elevation
+
+---
+
+# 13. Brand Section
+
+Display manufacturer logos in a clean grid.
+
+Examples:
+
+- BMW
+- Audi
+- Mercedes-Benz
+- Porsche
+- Volkswagen
+- Tesla
+
+Rules:
+
+- Equal spacing
+- No borders
+- Subtle hover opacity
+
+---
+
+# 14. Forms
+
+Use large comfortable inputs.
+
+Specifications
+
+Height
+
+```
+48px
+```
+
+Border Radius
+
+```
+16px
+```
+
+Border
+
+```
+1px solid #E5E7EB
+```
+
+Focused Border
+
+```
+#111111
+```
+
+Support
+
+- Image Upload
+- Drag & Drop
+- Image Preview
+- Validation Messages
+
+---
+
+# 15. Vehicle Management
+
+Admin should be able to:
+
+- Add Vehicle
+- Update Vehicle
+- Delete Vehicle
+- Restock Vehicle
+- Upload Image
+- Replace Image
+- Remove Image
+
+Changes should preview instantly.
+
+---
+
+# 16. Tables
+
+Tables are used only in the Admin Dashboard.
+
+Features:
+
+- Rounded container
+- Sticky header
+- Minimal borders
+- Row hover highlight
+- Responsive scrolling
+
+---
+
+# 17. Icons
+
+Library
+
+```
+Lucide React
+```
+
+Style
+
+- Outline icons
+- 20px default
+- Consistent stroke width
+
+---
+
+# 18. Images
+
+Images should be:
+
+- High resolution
+- Rounded corners
+- Lazy loaded
+- `object-cover`
+- Optimized for performance
+
+Every vehicle must have a featured image.
+
+---
+
+# 19. Motion
+
+Use **Framer Motion**.
+
+Allowed animations:
+
+- Fade In
+- Fade Up
+- Scale
+- Slide
+
+Duration
+
+```
+0.3s
+```
+
+Easing
+
+```
+easeOut
+```
+
+Hover Effects
+
+- Card Lift
+- Image Zoom
+- Button Scale
+
+Avoid excessive animation.
+
+---
+
+# 20. Responsive Design
+
+## Desktop
+
+```
+1440px+
+```
+
+## Laptop
+
+```
+1280px
+```
+
+## Tablet
+
+```
+768px
+```
+
+## Mobile
+
+```
+390px
+```
+
+Responsive Rules
+
+- Navigation becomes drawer
+- Cards stack vertically
+- Hero search panel becomes full width
+- Images remain dominant
+
+---
+
+# 21. Accessibility
+
+- WCAG AA contrast
+- Keyboard navigation
+- Visible focus states
+- Semantic HTML
+- Alt text for all images
+
+---
+
+# 22. Core Components
+
+- Navbar
+- Hero
+- Search Card
+- Vehicle Card
+- Category Card
+- Brand Grid
+- Featured Listings
+- Why Choose Us
+- Testimonials
+- CTA Banner
+- Footer
+- Login Form
+- Register Form
+- Dashboard Layout
+- Vehicle Table
+- Vehicle Form
+- Image Upload
+- Delete Dialog
+- Pagination
+- Search Filters
+- Toast Notifications
+- Loading Skeleton
+- Empty State
+- 404 Page
+
+---
+
+# 23. Design Rules
+
+## ✅ Do
+
+- Prioritize photography.
+- Use generous whitespace.
+- Keep layouts clean.
+- Maintain consistent spacing.
+- Use rounded corners.
+- Keep typography elegant.
+- Use subtle shadows.
+- Focus attention through layout instead of color.
+
+---
+
+## ❌ Don't
+
+- Don't use gradients.
+- Don't use glassmorphism.
+- Don't use neon colors.
+- Don't overcrowd sections.
+- Don't overuse animations.
+- Don't use tiny cards.
+- Don't use dashboard widgets on the customer homepage.
+- Don't introduce unnecessary accent colors.
+
+---
+
+# Final Design Statement
+
+LuxeDrive should feel like browsing vehicles in a premium automotive marketplace rather than managing inventory in enterprise software.
+
+Every page should communicate:
+
+- Luxury
+- Trust
+- Simplicity
+- Premium craftsmanship
+
+through photography, typography, spacing, and restraint.
