@@ -171,7 +171,6 @@ export const AppContent: React.FC = () => {
         {/* Luxury Landing Hero Banner & Floating Search */}
         <HeroBanner
           onSearch={(newFilters) => setFilters((prev) => ({ ...prev, ...newFilters }))}
-          onSelectCategory={(cat) => setFilters((prev) => ({ ...prev, category: cat }))}
           activeCategory={filters.category}
         />
 

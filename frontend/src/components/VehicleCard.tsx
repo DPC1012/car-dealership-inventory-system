@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Vehicle } from '../types';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { ShoppingBag, Edit, Trash2, PlusCircle } from 'lucide-react';
 
 interface VehicleCardProps {
@@ -24,7 +23,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   index = 0,
 }) => {
   const { isAuthenticated, isAdmin } = useAuth();
-  const { theme } = useTheme();
 
   const formatPrice = (amount: string | number) => {
     const num = typeof amount === 'string' ? parseFloat(amount) : amount;
@@ -81,15 +79,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           </div>
 
           <div className="absolute top-3 right-3">
-            <span
-              className={`text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md ${
-                isOutOfStock
-                  ? ''
-                  : isLowStock
-                  ? ''
-                  : ''
-              }`}
-              style={
+                        <span
+              className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md"
+              style=
+{
                 isOutOfStock
                   ? { backgroundColor: 'color-mix(in srgb, var(--color-error) 12%, transparent)', color: 'var(--color-error)', border: '1px solid color-mix(in srgb, var(--color-error) 30%, transparent)' }
                   : isLowStock

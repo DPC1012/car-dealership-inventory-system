@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Vehicle } from '../types';
 import { X, PlusCircle, AlertCircle } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
 
 interface RestockModalProps {
   vehicle: Vehicle | null;
@@ -18,7 +17,6 @@ export const RestockModal: React.FC<RestockModalProps> = ({
   onRestock,
   isLoading,
 }) => {
-  const { theme } = useTheme();
   const [quantity, setQuantity] = useState<number>(5);
   const [error, setError] = useState<string | null>(null);
 
@@ -83,7 +81,7 @@ export const RestockModal: React.FC<RestockModalProps> = ({
         </button>
 
         <div className="flex items-center gap-2 mb-1">
-          <PlusCircle className="w-5 h-5 text-[#22C55E]" />
+          <PlusCircle className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
           <h2 className="font-heading text-xl font-bold tracking-tight uppercase">
             Restock Inventory
           </h2>
@@ -94,7 +92,7 @@ export const RestockModal: React.FC<RestockModalProps> = ({
         </p>
 
         {error && (
-          <div className="mb-4 bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-3 flex items-center gap-2 text-xs" style={{ color: 'var(--color-error)' }}>
+          <div className="mb-4 rounded-2xl p-3 flex items-center gap-2 text-xs" style={{ backgroundColor: 'color-mix(in srgb, var(--color-error) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-error) 30%, transparent)', color: 'var(--color-error)' }}>
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -141,7 +139,8 @@ export const RestockModal: React.FC<RestockModalProps> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-[#111111] text-white hover:bg-[#27272A] px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md"
+              className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md"
+              style={isLoading ? { backgroundColor: 'var(--color-border)', color: 'var(--color-muted-text)', cursor: 'not-allowed' } : { backgroundColor: 'var(--color-primary-dark)', color: 'var(--color-bg)' }}
             >
               {isLoading ? 'Restocking...' : 'Confirm Restock'}
             </button>

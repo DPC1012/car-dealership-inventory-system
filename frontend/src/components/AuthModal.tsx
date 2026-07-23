@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { fetchApi } from '../config/api';
 import type { User } from '../types';
 import { X, Lock, Mail, User as UserIcon, AlertCircle } from 'lucide-react';
@@ -12,7 +11,6 @@ interface AuthModalProps {
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { login } = useAuth();
-  const { theme } = useTheme();
   const [isLoginTab, setIsLoginTab] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

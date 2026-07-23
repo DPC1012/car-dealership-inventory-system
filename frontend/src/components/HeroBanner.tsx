@@ -4,7 +4,6 @@ import type { VehicleCategory, SearchFilters } from '../types';
 
 interface HeroBannerProps {
   onSearch: (filters: SearchFilters) => void;
-  onSelectCategory: (category: VehicleCategory) => void;
   activeCategory?: VehicleCategory | '';
 }
 

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -29,8 +28,6 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
   toast,
   onDismiss,
 }) => {
-  const { theme } = useTheme();
-
   useEffect(() => {
     const timer = setTimeout(() => {
       onDismiss(toast.id);

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import type { Vehicle, VehicleCategory, VehicleFormData } from '../types';
 import { vehicleApi } from '../services/api';
 import { X, AlertCircle, Upload } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
 
 interface VehicleModalProps {
   isOpen: boolean;
@@ -29,7 +28,6 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
   initialData,
   isLoading,
 }) => {
-  const { theme } = useTheme();
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
   const [category, setCategory] = useState<VehicleCategory>('SEDAN');
@@ -122,7 +120,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
     }
   };
 
-  const inputClasses = "w-full rounded-2xl px-4 py-2.5 text-xs outline-none font-sans focus:bg-white";
+  const inputClasses = "w-full rounded-2xl px-4 py-2.5 text-xs outline-none font-sans";
 
   return (
     <div
@@ -256,7 +254,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://ik.imagekit.io/... or upload file below"
-                className="flex-1 rounded-2xl px-4 py-2.5 text-xs outline-none font-sans focus:bg-white"
+                className={`${inputClasses} flex-1`}
                 style={{ backgroundColor: 'var(--color-input-bg)', borderColor: 'var(--color-border)', color: 'var(--color-primary-text)', borderWidth: '1px', borderStyle: 'solid' }}
               />
 

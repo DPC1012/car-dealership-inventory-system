@@ -1,7 +1,6 @@
 import React from 'react';
 import type { SearchFilters as SearchFiltersType, VehicleCategory } from '../types';
 import { Search, RotateCcw, Filter } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
 
 interface SearchFiltersProps {
   filters: SearchFiltersType;
@@ -20,7 +19,6 @@ const CATEGORIES: VehicleCategory[] = [
 ];
 
 export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onChange, onClear }) => {
-  const { theme } = useTheme();
 
   const handleMakeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({ ...filters, make: e.target.value });

@@ -2,11 +2,6 @@ import { fetchApi } from '../config/api';
 import type { Vehicle, SearchFilters, VehicleFormData } from '../types';
 
 export const vehicleApi = {
-  getVehicles: async (): Promise<Vehicle[]> => {
-    const res = await fetchApi<{ vehicles: Vehicle[] }>('/vehicles');
-    return res.vehicles;
-  },
-
   searchVehicles: async (filters: SearchFilters): Promise<Vehicle[]> => {
     const params = new URLSearchParams();
     if (filters.make) params.append('make', filters.make);

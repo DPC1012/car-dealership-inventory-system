@@ -1,6 +1,5 @@
 import React from 'react';
 import { ArrowUpRight, Car, Shield, Wrench, DollarSign, Star, Clock, Phone, MapPin, ChevronRight } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
 import type { VehicleCategory, SearchFilters } from '../types';
 
 interface ShowcaseSectionsProps {
@@ -77,8 +76,6 @@ export const ShowcaseSections: React.FC<ShowcaseSectionsProps> = ({
   onSearch,
   onOpenAuth,
 }) => {
-  const { theme } = useTheme();
-
   return (
     <div className="space-y-16 py-4">
       {/* 1. Browse by Category Section (DESIGN_SYSTEM.md Section 12) */}

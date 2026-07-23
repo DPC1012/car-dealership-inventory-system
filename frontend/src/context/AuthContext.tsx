@@ -8,7 +8,6 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   login: (token: string, user: User) => void;
-  register: (token: string, user: User) => void;
   logout: () => void;
 }
 
@@ -54,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated,
         isAdmin,
         login: handleLogin,
-        register: handleLogin,
         logout: handleLogout,
       }}
     >
