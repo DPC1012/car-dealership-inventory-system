@@ -300,7 +300,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
               type="submit"
               disabled={isLoading}
               className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-md"
-              style={isLoading ? { backgroundColor: 'var(--color-border)', color: 'var(--color-muted-text)', cursor: 'not-allowed' } : { backgroundColor: 'var(--color-primary-dark)', color: 'var(--color-button-text)' }}
+              style={isLoading ? { backgroundColor: 'var(--color-border)', color: 'var(--color-muted-text)', cursor: 'not-allowed' } : { backgroundColor: 'var(--color-primary-dark)', color: 'var(--color-bg)' }}
             >
               {isLoading ? 'Saving...' : initialData ? 'Update Vehicle' : 'Add Vehicle'}
             </button>
