@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Vehicle, VehicleCategory, VehicleFormData } from '../types';
-import { X, AlertCircle } from 'lucide-react';
+import { vehicleApi } from '../services/api';
+import { X, AlertCircle, Upload } from 'lucide-react';
 
 interface VehicleModalProps {
   isOpen: boolean;
@@ -32,6 +33,8 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
   const [category, setCategory] = useState<VehicleCategory>('SEDAN');
   const [price, setPrice] = useState<number | ''>('');
   const [quantity, setQuantity] = useState<number | ''>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,15 +44,33 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
       setCategory(initialData.category);
       setPrice(typeof initialData.price === 'string' ? parseFloat(initialData.price) : initialData.price);
       setQuantity(initialData.quantity);
+      setImageUrl(initialData.imageUrl || '');
     } else {
       setMake('');
       setModel('');
       setCategory('SEDAN');
       setPrice('');
       setQuantity(1);
+      setImageUrl('');
     }
     setError(null);
   }, [initialData, isOpen]);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError(null);
+    try {
+      const uploadedUrl = await vehicleApi.uploadVehicleImage(file);
+      setImageUrl(uploadedUrl);
+    } catch (err: any) {
+      setError(err.message || 'Image upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -71,6 +92,7 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
         category,
         price: Number(price),
         quantity: Number(quantity),
+        imageUrl: imageUrl || null,
       });
       onClose();
     } catch (err: any) {
@@ -177,6 +199,49 @@ export const VehicleModal: React.FC<VehicleModalProps> = ({
                 className="w-full bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
               />
             </div>
+          </div>
+
+          {/* Vehicle Image Upload / URL Field */}
+          <div>
+            <label className="font-signage text-[11px] font-semibold tracking-wider text-[#454C5C] uppercase block mb-1">
+              Vehicle Image (File Upload or Image URL)
+            </label>
+
+            <div className="flex gap-2 mb-2">
+              <input
+                type="url"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://ik.imagekit.io/... or upload file below"
+                className="flex-1 bg-[#252932] border border-[#333846] rounded-sm px-3 py-2 text-sm text-[#F3F0E9] placeholder-[#454C5C] focus:border-[#E3A143] outline-none font-sans"
+              />
+
+              <label className="btn-ghost px-3 py-2 rounded-sm text-xs font-signage uppercase tracking-wider cursor-pointer flex items-center gap-1.5 hover:border-[#E3A143] hover:text-[#E3A143]">
+                <Upload className="w-3.5 h-3.5" />
+                {uploading ? 'Uploading...' : 'Browse'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  disabled={uploading}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            {imageUrl && (
+              <div className="w-full h-32 rounded-sm bg-[#252932] border border-[#333846] overflow-hidden relative mt-2">
+                <img src={imageUrl} alt="Vehicle Preview" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setImageUrl('')}
+                  className="absolute top-2 right-2 bg-black/70 text-white rounded-full p-1 hover:bg-[#C4574A]"
+                  title="Remove Image"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#333846]">

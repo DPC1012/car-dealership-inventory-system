@@ -24,6 +24,7 @@ export interface Vehicle {
   category: VehicleCategory;
   price: string | number;
   quantity: number;
+  imageUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -42,4 +43,5 @@ export interface VehicleFormData {
   category: VehicleCategory;
   price: number;
   quantity: number;
+  imageUrl?: string | null;
 }

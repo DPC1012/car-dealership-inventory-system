@@ -57,4 +57,14 @@ export const vehicleApi = {
     });
     return res.vehicle;
   },
+
+  uploadVehicleImage: async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await fetchApi<{ imageUrl: string }>('/vehicles/upload-image', {
+      method: 'POST',
+      body: formData,
+    });
+    return res.imageUrl;
+  },
 };

@@ -61,6 +61,26 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           </span>
         </div>
 
+        {/* Vehicle Image Header */}
+        <div className="w-full h-44 rounded-sm bg-[#252932] border border-[#333846] overflow-hidden mb-4 relative flex items-center justify-center">
+          {vehicle.imageUrl ? (
+            <img
+              src={vehicle.imageUrl}
+              alt={`${vehicle.make} ${vehicle.model}`}
+              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center text-[#454C5C]">
+              <span className="font-signage text-2xl font-bold tracking-widest text-[#454C5C]/60 uppercase">
+                {vehicle.make}
+              </span>
+              <span className="text-[10px] font-signage uppercase tracking-wider text-[#454C5C]/40 mt-1">
+                Showroom Vehicle
+              </span>
+            </div>
+          )}
+        </div>
+
         {/* Vehicle Title */}
         <h3 className="font-sans text-xl font-semibold text-[#F3F0E9] tracking-tight mb-1">
           {vehicle.make} {vehicle.model}
