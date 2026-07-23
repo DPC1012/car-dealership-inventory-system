@@ -74,18 +74,16 @@ export async function deleteVehicle(id: string): Promise<void> {
 }
 
 export async function purchaseVehicle(id: string): Promise<Vehicle> {
-  // Atomic conditional update to prevent overselling under concurrent load
-  const result = await prisma.vehicle.updateMany({
-    where: {
-      id,
-      quantity: { gt: 0 },
-    },
-    data: {
-      quantity: { decrement: 1 },
-    },
-  });
+  // Single atomic UPDATE ... RETURNING to prevent overselling and return the
+  // exact row state after this purchase (no separate read that could race).
+  const [updated] = await prisma.$queryRaw<Vehicle[]>`
+    UPDATE "Vehicle"
+    SET "quantity" = "quantity" - 1, "updatedAt" = NOW()
+    WHERE "id" = ${id} AND "quantity" > 0
+    RETURNING *
+  `;
 
-  if (result.count === 0) {
+  if (!updated) {
     const existing = await prisma.vehicle.findUnique({ where: { id } });
     if (!existing) {
       throw new NotFoundError('Vehicle not found');
@@ -93,7 +91,7 @@ export async function purchaseVehicle(id: string): Promise<Vehicle> {
     throw new ConflictError('Vehicle is out of stock');
   }
 
-  return getVehicleById(id);
+  return updated;
 }
 
 export async function restockVehicle(id: string, quantity: number): Promise<Vehicle> {
@@ -106,9 +104,23 @@ export async function restockVehicle(id: string, quantity: number): Promise<Vehi
   });
 }
 
-export async function uploadVehicleImage(fileBuffer: Buffer, originalName: string): Promise<string> {
+export async function uploadVehicleImage(
+  fileBuffer: Buffer,
+  originalName: string,
+  vehicleId?: string,
+): Promise<string> {
   const { uploadImageToImageKit } = await import('../lib/imagekit');
   const fileName = `vehicle-${Date.now()}-${originalName.replace(/\s+/g, '_')}`;
-  return uploadImageToImageKit(fileBuffer, fileName);
+  const url = await uploadImageToImageKit(fileBuffer, fileName);
+
+  if (vehicleId) {
+    await getVehicleById(vehicleId);
+    await prisma.vehicle.update({
+      where: { id: vehicleId },
+      data: { imageUrl: url },
+    });
+  }
+
+  return url;
 }
 

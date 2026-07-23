@@ -34,7 +34,11 @@ describe('Vehicles CRUD & Search Endpoints', () => {
 
   describe('Authentication & Authorization Guards', () => {
     it('returns 401 Unauthorized for unauthenticated requests to protected endpoints', async () => {
-      const res = await request(app).get('/api/vehicles');
+      const v = await prisma.vehicle.create({
+        data: { make: 'Toyota', model: 'Camry', category: 'SEDAN', price: 2500000.0, quantity: 1 },
+      });
+
+      const res = await request(app).post(`/api/vehicles/${v.id}/purchase`);
       expect(res.status).toBe(401);
     });
 
@@ -56,13 +60,62 @@ describe('Vehicles CRUD & Search Endpoints', () => {
 
       expect(res.status).toBe(403);
     });
-  });
 
-  describe('CRUD Operations', () => {
-    it('creates a vehicle (POST /api/vehicles)', async () => {
+    it('returns 403 Forbidden when a normal user attempts to create a vehicle', async () => {
       const res = await request(app)
         .post('/api/vehicles')
         .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          make: 'Honda',
+          model: 'Civic',
+          category: 'SEDAN',
+          price: 2000000,
+          quantity: 10,
+        });
+
+      expect(res.status).toBe(403);
+    });
+
+    it('returns 403 Forbidden when a normal user attempts to update a vehicle', async () => {
+      const v = await prisma.vehicle.create({
+        data: { make: 'BMW', model: 'M3', category: 'SEDAN', price: 8000000, quantity: 3 },
+      });
+
+      const res = await request(app)
+        .put(`/api/vehicles/${v.id}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          make: 'BMW',
+          model: 'M3 Competition',
+          category: 'SEDAN',
+          price: 9000000,
+          quantity: 3,
+        });
+
+      expect(res.status).toBe(403);
+    });
+  });
+
+  describe('CRUD Operations', () => {
+    it('allows unauthenticated users to browse vehicles (GET /api/vehicles)', async () => {
+      await prisma.vehicle.createMany({
+        data: [
+          { make: 'Tesla', model: 'Model 3', category: 'SEDAN', price: 4500000, quantity: 2 },
+          { make: 'Ford', model: 'F-150', category: 'TRUCK', price: 5500000, quantity: 1 },
+        ],
+      });
+
+      const res = await request(app).get('/api/vehicles');
+
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body.vehicles)).toBe(true);
+      expect(res.body.vehicles.length).toBe(2);
+    });
+
+    it('creates a vehicle as admin (POST /api/vehicles)', async () => {
+      const res = await request(app)
+        .post('/api/vehicles')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           make: 'Honda',
           model: 'Civic',
@@ -98,14 +151,14 @@ describe('Vehicles CRUD & Search Endpoints', () => {
       expect(res.body.vehicles.length).toBe(2);
     });
 
-    it('updates a vehicle (PUT /api/vehicles/:id)', async () => {
+    it('updates a vehicle as admin (PUT /api/vehicles/:id)', async () => {
       const v = await prisma.vehicle.create({
         data: { make: 'BMW', model: 'M3', category: 'SEDAN', price: 8000000, quantity: 3 },
       });
 
       const res = await request(app)
         .put(`/api/vehicles/${v.id}`)
-        .set('Authorization', `Bearer ${userToken}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           make: 'BMW',
           model: 'M3 Competition',

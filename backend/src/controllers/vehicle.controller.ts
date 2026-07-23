@@ -53,7 +53,8 @@ export async function uploadImage(req: Request, res: Response): Promise<void> {
   }
   const imageUrl = await vehicleService.uploadVehicleImage(
     req.file.buffer,
-    req.file.originalname
+    req.file.originalname,
+    req.body.vehicleId,
   );
   res.status(200).json({ imageUrl });
 }
