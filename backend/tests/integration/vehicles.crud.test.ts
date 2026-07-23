@@ -10,6 +10,7 @@ describe('Vehicles CRUD & Search Endpoints', () => {
   beforeEach(async () => {
     // Create test user
     const userRes = await request(app).post('/api/auth/register').send({
+      name: 'Test User',
       email: 'user@example.com',
       password: 'password123',
     });
@@ -19,6 +20,7 @@ describe('Vehicles CRUD & Search Endpoints', () => {
     const adminPassword = await hashPassword('adminpassword123');
     await prisma.user.create({
       data: {
+        name: 'Test Admin',
         email: 'admin@example.com',
         password: adminPassword,
         role: 'ADMIN',

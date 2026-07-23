@@ -5,6 +5,7 @@ describe('POST /api/auth/login', () => {
   beforeEach(async () => {
     // Register a user to test login against
     await request(app).post('/api/auth/register').send({
+      name: 'Login User',
       email: 'loginuser@example.com',
       password: 'password123',
     });

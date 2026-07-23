@@ -10,6 +10,7 @@ describe('POST /api/vehicles/upload-image (Media Upload)', () => {
   beforeEach(async () => {
     // Create test user
     const userRes = await request(app).post('/api/auth/register').send({
+      name: 'Test User',
       email: 'mediauser@example.com',
       password: 'password123',
     });
@@ -19,6 +20,7 @@ describe('POST /api/vehicles/upload-image (Media Upload)', () => {
     const adminPassword = await hashPassword('adminpassword123');
     await prisma.user.create({
       data: {
+        name: 'Test Admin',
         email: 'mediaadmin@example.com',
         password: adminPassword,
         role: 'ADMIN',

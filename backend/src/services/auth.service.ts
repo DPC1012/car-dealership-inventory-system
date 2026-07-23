@@ -19,7 +19,7 @@ export async function registerUser(input: RegisterInput): Promise<SafeUser> {
 
   try {
     const user = await prisma.user.create({
-      data: { email: input.email, password },
+      data: { name: input.name, email: input.email, password },
     });
     return toSafeUser(user);
   } catch (err) {

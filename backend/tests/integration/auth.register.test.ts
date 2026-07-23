@@ -5,6 +5,7 @@ import { prisma } from '../../src/lib/prisma';
 describe('POST /api/auth/register', () => {
   it('creates a new user and returns 201 with a token and safe user payload', async () => {
     const res = await request(app).post('/api/auth/register').send({
+      name: 'New User',
       email: 'newuser@example.com',
       password: 'password123',
     });
@@ -13,6 +14,7 @@ describe('POST /api/auth/register', () => {
     expect(res.body).toHaveProperty('token');
     expect(typeof res.body.token).toBe('string');
     expect(res.body.user).toMatchObject({
+      name: 'New User',
       email: 'newuser@example.com',
       role: 'USER',
     });

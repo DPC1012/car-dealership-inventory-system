@@ -9,6 +9,7 @@ describe('Inventory Operations & Concurrency', () => {
 
   beforeEach(async () => {
     const userRes = await request(app).post('/api/auth/register').send({
+      name: 'Test User',
       email: 'user@example.com',
       password: 'password123',
     });
@@ -17,6 +18,7 @@ describe('Inventory Operations & Concurrency', () => {
     const adminPassword = await hashPassword('adminpassword123');
     await prisma.user.create({
       data: {
+        name: 'Test Admin',
         email: 'admin@example.com',
         password: adminPassword,
         role: 'ADMIN',
